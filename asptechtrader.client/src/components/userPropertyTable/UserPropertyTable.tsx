@@ -1,0 +1,187 @@
+import { Skeleton, Stack } from "@mui/material";
+import Box from "@mui/material/Box";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../GlobalRedux/store";
+import { useSymbols } from "../../features/reactQuerySymbols/useSymbols";
+import { updateCurrentSelectedTableSymbol } from "../../GlobalRedux/Features/tableSymbols/tableSymbols-slice";
+import { useUserTradeAccount } from "../../features/reactQueryTradeAccount/useUserTradeAccount";
+
+const columns: GridColDef[] = [
+  {
+    field: "symbolName",
+    // headerClassName: 'text-[#185875] bg-[#b1b6be] dark:bg-[#1f2739]',
+    headerName: "نماد",
+    // width: 80,
+  },
+  {
+    field: "volume",
+    headerName: "حجم",
+    type: "number",
+    align: "left",
+    headerAlign: "left",
+    width: 100,
+  },
+
+  {
+    field: "lastPrice",
+    headerName: "ق پایانی",
+    type: "number",
+    align: "left",
+    headerAlign: "left",
+    width: 100,
+  },
+  {
+    field: "lastPricePercentage",
+    headerName: "%ق پایانی",
+    type: "number",
+    align: "left",
+    headerAlign: "left",
+    width: 100,
+  },
+  {
+    field: "state",
+    headerName: "وضعیت",
+    type: "number",
+    align: "left",
+    headerAlign: "left",
+    width: 100,
+  },
+];
+
+interface datagridRowType {
+  id: number;
+  symbolName: string;
+  count: number;
+  lastPrice: number;
+  lastPricePercentage: number;
+  state: "ALLOWED" | "NOTALLOWED";
+}
+
+export default function UserPropertyTable() {
+  const dispatch = useDispatch<AppDispatch>();
+
+  // fetch all the symbols from the db
+   // const { dataBaseSybmols, isLoading } = useSymbols();
+    const isLoading = false
+    const dataBaseSybmols = [{
+        id: 1,
+        symbolName: 1,
+        volume: 1,
+        lastDeal: 1,
+        lastDealPercentage: 1,
+        lastPrice: 1,
+        lastPricePercentage: 1,
+        theFirst: 1,
+        theLeast: 1,
+        theMost: 1,
+        demandVolume: 1,
+        demandPrice: 1,
+        offerPrice: 1,
+        offerVolume: 1,
+        state: 1,
+        chartNumber: 1,
+    }]
+
+  // fetch the userTradeAccount from the db
+  const { userTradeAccount, isLoadingTradeAccount, error } =
+    useUserTradeAccount();
+
+    const userBoughtSymbols = [{
+        id: 1,
+        symbolName: "ssssss",
+        count: 50,
+        tradeAccountId:4
+
+    }]
+
+
+  // if is loading return a skeleton
+  if (isLoadingTradeAccount || isLoading)
+    return (
+      <Stack paddingTop={1} spacing={1}>
+        <Skeleton
+          animation="wave"
+          variant="rounded"
+          width="full"
+          height={140}
+        />
+      </Stack>
+    );
+
+  // if there was an error then retune a toast
+  if (error) return toast.error("اخطار.لطفا اتصال اینترنت خود را چک کنید.");
+
+  let dataGridRows: datagridRowType[] = [];
+  // i want more information to put in data-grid-table about a symbol, but i only stored "symbolName" and "count" in the userBoughtSymbol
+  // so i loop throgh the dataBaseSymbols and find the userBoughtSymbols and push a new obj with a combine-information of bgsymbol and userBoughtSymbol
+    //userTradeAccount!.userBoughtSymbols
+    userBoughtSymbols.map(
+    (boughtSymbol: { id: number; symbolName: string; count: number }) => {
+      dataBaseSybmols?.map((dbSymbol) => {
+        if (dbSymbol.symbolName === boughtSymbol.symbolName) {
+          dataGridRows.push({
+            id: dbSymbol.id,
+            symbolName: dbSymbol.symbolName,
+            lastPrice: dbSymbol.lastPrice,
+            lastPricePercentage: dbSymbol.lastPricePercentage,
+            state: dbSymbol.state,
+            count: boughtSymbol.count,
+          });
+        }
+      });
+    }
+  );
+
+  const rows = dataGridRows.map((symbol) => {
+    return {
+      id: symbol.id,
+      symbolName: symbol.symbolName,
+      volume: symbol.count,
+      lastPrice: symbol.lastPrice,
+      lastPricePercentage: `${symbol.lastPricePercentage}%`,
+      state: symbol.state === "ALLOWED" ? "مجاز" : "ممنوع",
+    };
+  });
+
+  // this function is for finding the selected symbol and give it to the redux
+  function handleRowSelectionClick(currentSymbolName: string) {
+    // find the current-selected-symbol from the table and return it
+    const currentSelectedTableSymbol = dataBaseSybmols!.find((symbol: any) => {
+      return symbol.symbolName === currentSymbolName;
+    });
+    dispatch(updateCurrentSelectedTableSymbol(currentSelectedTableSymbol!));
+  }
+
+  return (
+    <Box
+      sx={{
+        height: { xs: 360, md: 260 },
+        bgcolor: "ternery.main",
+        scrollbarColor: "blue",
+      }}
+    >
+      <DataGrid
+        sx={{ height: { xs: 260, md: 260 } }}
+        loading={isLoadingTradeAccount}
+        scrollbarSize={10}
+        columnHeaderHeight={40}
+        onRowClick={(event) => handleRowSelectionClick(event.row.symbolName)}
+        rowHeight={35}
+        rows={rows!}
+        columns={columns}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 15,
+            },
+          },
+        }}
+        pageSizeOptions={[15]}
+        // checkboxSelection
+        // disableRowSelectionOnClick
+      />
+    </Box>
+  );
+}

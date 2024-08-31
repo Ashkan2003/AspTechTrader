@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspTechTrader.Server", "AspTechTrader.Server\AspTechTrader.Server.csproj", "{01B5BFC4-5997-4738-98BB-25DFC377D98D}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "asptechtrader.client", "asptechtrader.client\asptechtrader.client.esproj", "{5F0D9623-9043-4041-81A7-005BFCDF578E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "frontend", "frontend", "{E61F1C14-1FCF-4939-8390-184C2F72FE65}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{9CDD1781-5956-4820-AD06-22A2918CDB78}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{01B5BFC4-5997-4738-98BB-25DFC377D98D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01B5BFC4-5997-4738-98BB-25DFC377D98D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01B5BFC4-5997-4738-98BB-25DFC377D98D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01B5BFC4-5997-4738-98BB-25DFC377D98D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F0D9623-9043-4041-81A7-005BFCDF578E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F0D9623-9043-4041-81A7-005BFCDF578E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F0D9623-9043-4041-81A7-005BFCDF578E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5F0D9623-9043-4041-81A7-005BFCDF578E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F0D9623-9043-4041-81A7-005BFCDF578E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F0D9623-9043-4041-81A7-005BFCDF578E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{01B5BFC4-5997-4738-98BB-25DFC377D98D} = {9CDD1781-5956-4820-AD06-22A2918CDB78}
+		{5F0D9623-9043-4041-81A7-005BFCDF578E} = {E61F1C14-1FCF-4939-8390-184C2F72FE65}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E84691CB-9431-4BC8-A4D8-53BFFC95223D}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@font-face {
+    font-family: "iranSansWeb"; /*Can be any text*/
+    src:url("../public/fonts/teqh_iransansweb.ttf");
+}
+
+body {
+    font-family: "iranSansWeb"
+}
