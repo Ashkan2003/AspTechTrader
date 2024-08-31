@@ -3,13 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspTechTrader.Server", "AspTechTrader.Server\AspTechTrader.Server.csproj", "{01B5BFC4-5997-4738-98BB-25DFC377D98D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspTechTrader.Api", "AspTechTrader.Server\AspTechTrader.Api.csproj", "{01B5BFC4-5997-4738-98BB-25DFC377D98D}"
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "asptechtrader.client", "asptechtrader.client\asptechtrader.client.esproj", "{5F0D9623-9043-4041-81A7-005BFCDF578E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "frontend", "frontend", "{E61F1C14-1FCF-4939-8390-184C2F72FE65}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{9CDD1781-5956-4820-AD06-22A2918CDB78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspTechTrader.Core", "AspTechTrader.Core\AspTechTrader.Core.csproj", "{E19CA355-D300-430F-9709-C838C02BF182}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspTechTrader.Infrastructure", "AspTechTrader.Infrastructure\AspTechTrader.Infrastructure.csproj", "{74297A55-8BB9-45BC-9729-B2C0C239F878}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{5F0D9623-9043-4041-81A7-005BFCDF578E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F0D9623-9043-4041-81A7-005BFCDF578E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5F0D9623-9043-4041-81A7-005BFCDF578E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{E19CA355-D300-430F-9709-C838C02BF182}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E19CA355-D300-430F-9709-C838C02BF182}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E19CA355-D300-430F-9709-C838C02BF182}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E19CA355-D300-430F-9709-C838C02BF182}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74297A55-8BB9-45BC-9729-B2C0C239F878}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74297A55-8BB9-45BC-9729-B2C0C239F878}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74297A55-8BB9-45BC-9729-B2C0C239F878}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74297A55-8BB9-45BC-9729-B2C0C239F878}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -34,6 +46,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{01B5BFC4-5997-4738-98BB-25DFC377D98D} = {9CDD1781-5956-4820-AD06-22A2918CDB78}
 		{5F0D9623-9043-4041-81A7-005BFCDF578E} = {E61F1C14-1FCF-4939-8390-184C2F72FE65}
+		{E19CA355-D300-430F-9709-C838C02BF182} = {9CDD1781-5956-4820-AD06-22A2918CDB78}
+		{74297A55-8BB9-45BC-9729-B2C0C239F878} = {9CDD1781-5956-4820-AD06-22A2918CDB78}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E84691CB-9431-4BC8-A4D8-53BFFC95223D}

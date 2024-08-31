@@ -124,27 +124,10 @@ const columns: GridColDef[] = [
 export default function MainTable() {
   const dispatch = useDispatch<AppDispatch>();
 
-  // get the entire symbols from the db with react-query
-   // const { isLoading, dataBaseSybmols, error } = useSymbols();
-    const isLoading = false
-    const dataBaseSybmols = [{
-        id: 1,
-        symbolName: 1,
-        volume: 1,
-        lastDeal: 1,
-        lastDealPercentage: 1,
-        lastPrice: 1,
-        lastPricePercentage: 1,
-        theFirst: 1,
-        theLeast: 1,
-        theMost: 1,
-        demandVolume: 1,
-        demandPrice: 1,
-        offerPrice: 1,
-        offerVolume: 1,
-        state: 1,
-        chartNumber: 1,
-    }]
+   //get the entire symbols from the db with react-query
+    const { isLoading, dataBaseSybmols, error } = useSymbols();
+    console.log(dataBaseSybmols)
+   
 
   // get the selected-symbols-name that are selected by user from the watchTabsList
   const reduxSymbols = useAppSelectore(
@@ -174,7 +157,7 @@ export default function MainTable() {
     );
 
   // if there was an error then retune a toast
-  //if (error) return toast.error("اخطار.لطفا اتصال اینترنت خود را چک کنید.");
+  if (error) return toast.error("اخطار.لطفا اتصال اینترنت خود را چک کنید.");
 
   // we want to filter throg the entire db-symbols and return the symbols that symbleName in in reduxSymbols
     // boom. the magic happen here
@@ -200,8 +183,8 @@ export default function MainTable() {
   }
 
   const rows = dataGridSymbols?.map((symbol) => {
-    return {
-      id: symbol.id,
+      return {
+      id: symbol.symbolId,
       symbolName: symbol.symbolName,
       volume: `${symbol.volume}`,
       lastDeal: symbol.lastDeal,

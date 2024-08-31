@@ -11,7 +11,7 @@ export const useSymbols = () => {
   } = useQuery<Symbol[]>({
     queryKey: ["symbols"], // the queryKey is a unic key to identify the data in the cash
     queryFn: async () =>
-      await axios.get("/api/symbols").then((res) => res.data), // we pass a function to this to fetch the data
+        await axios.get("https://localhost:7007/api/Symbols/getSymbols").then((res) => res.data), // we pass a function to this to fetch the data
     
   });
   return { dataBaseSybmols, isLoading, error };

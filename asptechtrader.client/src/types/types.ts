@@ -1,5 +1,5 @@
 export type Symbol = {
-  id                 : number,
+  symbolId                 : number,
   symbolName         : string,
   volume             : number,
   lastDeal           : number,
