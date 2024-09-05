@@ -1,12 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AspTechTrader.Core.Domain.Entities
+namespace AspTechTrader.Core.DTO
 {
-    public class User
+    public class UserAddRequestDTO
     {
-        [Key]
-        public Guid UserId { get; set; }
-
         [Required(ErrorMessage = "UserName cant be blank")]
         public string UserName { get; set; }
 
@@ -15,12 +12,6 @@ namespace AspTechTrader.Core.Domain.Entities
         [DataType(DataType.EmailAddress)]
         public string EmailAddress { get; set; }
 
-        public int UserProperty { get; set; }
-
-
-        //relation
-        public List<Symbol> Symbols { get; set; } = [];
-        public List<UserSymbol> UserSymbols { get; set; }
 
 
 

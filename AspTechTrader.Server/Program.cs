@@ -5,6 +5,7 @@ using AspTechTrader.Core.Services;
 using AspTechTrader.Infrastructure.AppDbContext;
 using AspTechTrader.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace AspTechTrader.Api
 {
@@ -23,7 +24,9 @@ namespace AspTechTrader.Api
 
             // Add services to the container.
             builder.Services.AddScoped<ISymbolsService, SymbolsService>();
+            builder.Services.AddScoped<IUserService, UsersService>();
             builder.Services.AddScoped<ISymbolsRepository, SymbolsRepository>();
+            builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 
 
             builder.Services.AddControllers();
@@ -44,6 +47,11 @@ namespace AspTechTrader.Api
                     .WithHeaders("Authorization", "origin", "accept", "content-type");
                 });
             });
+
+            // i added this code to fix the cycle error when using include method in EFCore
+            //builder.Services.AddControllers().AddJsonOptions(x =>
+            //    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+
 
             var app = builder.Build();
 

@@ -11,19 +11,24 @@ namespace AspTechTrader.Core.Domain.Entities
         [Required]
         public string SymbolName { get; set; }
 
-        public int? volume { get; set; }
-        public int? lastDeal { get; set; }
-        public float? lastDealPercentage { get; set; }
-        public int? lastPrice { get; set; }
-        public float? lastPricePercentage { get; set; }
-        public int? theFirst { get; set; }
-        public int? theLeast { get; set; }
-        public int? theMost { get; set; }
-        public int? demandVolume { get; set; }
-        public int? demandPrice { get; set; }
-        public int? offerPrice { get; set; }
-        public int? offerVolume { get; set; }
-        public StateOptions? state { get; set; } = StateOptions.NOTALLOWED;
-        public string? chartNumber { get; set; }
+        public int? Volume { get; set; }
+        public int? LastDeal { get; set; }
+        public float? LastDealPercentage { get; set; }
+        public int? LastPrice { get; set; }
+        public float? LastPricePercentage { get; set; }
+        public int? TheFirst { get; set; }
+        public int? TheLeast { get; set; }
+        public int? TheMost { get; set; }
+        public int? DemandVolume { get; set; }
+        public int? DemandPrice { get; set; }
+        public int? OfferPrice { get; set; }
+        public int? OfferVolume { get; set; }
+        public StateOptions? State { get; set; } = StateOptions.NOTALLOWED;
+        public string? ChartNumber { get; set; }
+
+
+        // relation
+        public List<User> Users { get; set; } = [];
+        public List<UserSymbol> UserSymbols { get; set; }
     }
 }
