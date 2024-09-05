@@ -20,7 +20,8 @@ namespace AspTechTrader.Infrastructure.Repositories
         // we make this optional becuz the User may not be exict
         public async Task<User?> GetUserById(Guid userId)
         {
-            return await _db.Users.Include(user => user.Symbols).FirstOrDefaultAsync((temp) => temp.UserId == userId);
+            User matchedUser = await _db.Users.Include(user => user.Symbols).FirstOrDefaultAsync((temp) => temp.UserId == userId);
+            return matchedUser;
         }
 
         public async Task<User> AddUser(User user)
@@ -53,5 +54,27 @@ namespace AspTechTrader.Infrastructure.Repositories
             return rowDeleted > 0;
 
         }
+
+
+        public async Task<User> AddSymbolToUserSymbolList(UserSymbol userSymbol)
+        {
+            User? matchedUser = await _db.Users.FirstOrDefaultAsync(temp => temp.UserId == userSymbol.UserId);
+            Symbol? matchedSymbol = await _db.Symbols.FirstOrDefaultAsync(temp => temp.SymbolId == userSymbol.SymbolId);
+            if (matchedUser == null)
+            {
+                throw new Exception("no user finded with the given userId in AddSymbolToUserSymbolList-metod");
+            }
+            if (matchedSymbol == null)
+            {
+                throw new Exception("no symbol finded with the given userId in AddSymbolToUserSymbolList-metod");
+            }
+
+            matchedUser.Symbols.Add(matchedSymbol);
+            await _db.SaveChangesAsync();
+            return matchedUser;
+
+        }
+
+
     }
 }

@@ -113,5 +113,10 @@ namespace AspTechTrader.Core.Services
 
             return updatedUser;
         }
+
+        public Task<User> AddSymbolToUserSymbolList(UserSymbol userSymbol)
+        {
+            return _usersRepository.AddSymbolToUserSymbolList(userSymbol);
+        }
     }
 }

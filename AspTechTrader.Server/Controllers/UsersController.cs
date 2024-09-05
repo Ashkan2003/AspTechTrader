@@ -41,14 +41,12 @@ namespace AspTechTrader.Api.Controllers
             return Ok(user);
         }
 
-
         [HttpPost("addUser")]
         public async Task<ActionResult<User>> Post(UserAddRequestDTO userAddRequest)
         {
             User AddedUser = await _userService.AddUser(userAddRequest);
             return Ok(AddedUser);
         }
-
 
         [HttpPut("updateUser")]
         public async Task<ActionResult<User>> Put(UserUpdateRequestDTO userUpdateRequest)
@@ -70,6 +68,7 @@ namespace AspTechTrader.Api.Controllers
             return Ok(UpdatedUser);
 
         }
+
         [HttpDelete("deleteUserById")]
         public async Task<ActionResult> Delete(string userId)
         {
@@ -88,6 +87,26 @@ namespace AspTechTrader.Api.Controllers
             }
 
             return Ok("user deleted successfully");
+        }
+
+
+        [HttpPost("AddSymbolToUserSymbolList")]
+        public async Task<ActionResult> AddSymbol(UserSymbol userSymbol)
+        {
+            if (userSymbol == null)
+            {
+                return BadRequest("userSymbol object not supplied");
+            }
+
+            if (userSymbol.UserId == Guid.Empty && userSymbol.SymbolId == Guid.Empty)
+            {
+                return BadRequest("userId or symbolId not supplied");
+            }
+
+            User updatedUser = await _userService.AddSymbolToUserSymbolList(userSymbol);
+
+            return Ok(updatedUser);
+
         }
     }
 }

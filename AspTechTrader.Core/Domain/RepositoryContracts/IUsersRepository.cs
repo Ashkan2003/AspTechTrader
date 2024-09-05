@@ -34,5 +34,7 @@ namespace AspTechTrader.Core.Domain.RepositoryContracts
         /// <param name="userId"></param>
         /// <returns>true if deleted successfully</returns>
         Task<bool> DeleteUserById(Guid userId);
+
+        Task<User> AddSymbolToUserSymbolList(UserSymbol userSymbol);
     }
 }

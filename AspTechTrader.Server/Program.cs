@@ -29,7 +29,11 @@ namespace AspTechTrader.Api
             builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                // add this code to prevent cycles when navigating bettven relation
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            });
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
