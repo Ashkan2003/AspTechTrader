@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AspTechTrader.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240905120914_relation1")]
-    partial class relation1
+    [Migration("20240909055746_rel1")]
+    partial class rel1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -79,7 +79,47 @@ namespace AspTechTrader.Infrastructure.Migrations
 
                     b.HasKey("SymbolId");
 
-                    b.ToTable("Symbols");
+                    b.ToTable("Symbol", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            SymbolId = new Guid("c39734d9-125a-43fa-88fe-8e12a209f1b1"),
+                            ChartNumber = "100",
+                            DemandPrice = 100,
+                            DemandVolume = 100,
+                            LastDeal = 100,
+                            LastDealPercentage = 100f,
+                            LastPrice = 100,
+                            LastPricePercentage = 100f,
+                            OfferPrice = 100,
+                            OfferVolume = 100,
+                            State = 1,
+                            SymbolName = "دارایکم",
+                            TheFirst = 100,
+                            TheLeast = 100,
+                            TheMost = 100,
+                            Volume = 100
+                        },
+                        new
+                        {
+                            SymbolId = new Guid("df32447c-7578-46af-a77a-73efd458c201"),
+                            ChartNumber = "100",
+                            DemandPrice = 100,
+                            DemandVolume = 100,
+                            LastDeal = 600,
+                            LastDealPercentage = 100f,
+                            LastPrice = 150,
+                            LastPricePercentage = 100f,
+                            OfferPrice = 100,
+                            OfferVolume = 100,
+                            State = 1,
+                            SymbolName = "اختم",
+                            TheFirst = 100,
+                            TheLeast = 110,
+                            TheMost = 100,
+                            Volume = 120
+                        });
                 });
 
             modelBuilder.Entity("AspTechTrader.Core.Domain.Entities.User", b =>
@@ -101,47 +141,59 @@ namespace AspTechTrader.Infrastructure.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users");
+                    b.ToTable("User", (string)null);
                 });
 
-            modelBuilder.Entity("AspTechTrader.Core.Domain.Entities.UserSymbol", b =>
+            modelBuilder.Entity("AspTechTrader.Core.Domain.Entities.UserSymbolProperty", b =>
                 {
-                    b.Property<Guid>("SymbolId")
+                    b.Property<Guid>("UserSymbolPropertyId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("SymbolId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("SymbolId", "UserId");
+                    b.Property<int>("SymbolPrice")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SymbolQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserSymbolPropertyId");
+
+                    b.HasIndex("SymbolId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserSymbol");
+                    b.ToTable("UserSymbolProperty", (string)null);
                 });
 
-            modelBuilder.Entity("AspTechTrader.Core.Domain.Entities.UserSymbol", b =>
+            modelBuilder.Entity("AspTechTrader.Core.Domain.Entities.UserSymbolProperty", b =>
                 {
-                    b.HasOne("AspTechTrader.Core.Domain.Entities.Symbol", null)
-                        .WithMany("UserSymbols")
-                        .HasForeignKey("SymbolId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("AspTechTrader.Core.Domain.Entities.Symbol", "Symbol")
+                        .WithMany("UserSymbolProperties")
+                        .HasForeignKey("SymbolId");
 
-                    b.HasOne("AspTechTrader.Core.Domain.Entities.User", null)
-                        .WithMany("UserSymbols")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("AspTechTrader.Core.Domain.Entities.User", "User")
+                        .WithMany("UserSymbolProperties")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Symbol");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("AspTechTrader.Core.Domain.Entities.Symbol", b =>
                 {
-                    b.Navigation("UserSymbols");
+                    b.Navigation("UserSymbolProperties");
                 });
 
             modelBuilder.Entity("AspTechTrader.Core.Domain.Entities.User", b =>
                 {
-                    b.Navigation("UserSymbols");
+                    b.Navigation("UserSymbolProperties");
                 });
 #pragma warning restore 612, 618
         }

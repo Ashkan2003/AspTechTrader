@@ -25,8 +25,10 @@ namespace AspTechTrader.Api
             // Add services to the container.
             builder.Services.AddScoped<ISymbolsService, SymbolsService>();
             builder.Services.AddScoped<IUserService, UsersService>();
+            builder.Services.AddScoped<IUserSymbolPropertyService, UserSymbolPropertyService>();
             builder.Services.AddScoped<ISymbolsRepository, SymbolsRepository>();
             builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+            builder.Services.AddScoped<IUserSymbolPropertyRepository, UserSymbolPropertyRepository>();
 
 
             builder.Services.AddControllers().AddJsonOptions(options =>

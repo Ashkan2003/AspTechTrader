@@ -76,12 +76,12 @@ namespace AspTechTrader.Infrastructure.Migrations
 
                     b.HasKey("SymbolId");
 
-                    b.ToTable("Symbols");
+                    b.ToTable("Symbol", (string)null);
 
                     b.HasData(
                         new
                         {
-                            SymbolId = new Guid("1146184b-e8f3-4385-a43b-5fef1cbd17df"),
+                            SymbolId = new Guid("c39734d9-125a-43fa-88fe-8e12a209f1b1"),
                             ChartNumber = "100",
                             DemandPrice = 100,
                             DemandVolume = 100,
@@ -100,7 +100,7 @@ namespace AspTechTrader.Infrastructure.Migrations
                         },
                         new
                         {
-                            SymbolId = new Guid("8605cd04-cade-48ef-ae79-d108652f93fb"),
+                            SymbolId = new Guid("df32447c-7578-46af-a77a-73efd458c201"),
                             ChartNumber = "100",
                             DemandPrice = 100,
                             DemandVolume = 100,
@@ -138,47 +138,116 @@ namespace AspTechTrader.Infrastructure.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users");
+                    b.ToTable("User", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = new Guid("8d75d5bf-ea72-4f50-b72f-9e077a49518c"),
+                            EmailAddress = "ashkan@email.com",
+                            UserName = "ashkan",
+                            UserProperty = 160
+                        },
+                        new
+                        {
+                            UserId = new Guid("70e41be8-ee03-4ed7-aa9e-7ad3d3b367b7"),
+                            EmailAddress = "jonas@email.com",
+                            UserName = "jonas",
+                            UserProperty = 1160
+                        },
+                        new
+                        {
+                            UserId = new Guid("43966394-6325-4e7d-a218-cf2d43faae24"),
+                            EmailAddress = "amin@email.com",
+                            UserName = "amin",
+                            UserProperty = 10
+                        });
                 });
 
-            modelBuilder.Entity("AspTechTrader.Core.Domain.Entities.UserSymbol", b =>
+            modelBuilder.Entity("AspTechTrader.Core.Domain.Entities.UserSymbolProperty", b =>
                 {
-                    b.Property<Guid>("SymbolId")
+                    b.Property<Guid>("UserSymbolPropertyId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("SymbolId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("SymbolId", "UserId");
+                    b.Property<int>("SymbolPrice")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SymbolQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserSymbolPropertyId");
+
+                    b.HasIndex("SymbolId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserSymbol");
+                    b.ToTable("UserSymbolProperty", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserSymbolPropertyId = new Guid("2af3944d-8dfa-4262-a9e0-bb96ad2c7166"),
+                            SymbolId = new Guid("c39734d9-125a-43fa-88fe-8e12a209f1b1"),
+                            SymbolPrice = 40,
+                            SymbolQuantity = 170,
+                            UserId = new Guid("8d75d5bf-ea72-4f50-b72f-9e077a49518c")
+                        },
+                        new
+                        {
+                            UserSymbolPropertyId = new Guid("98818f76-e989-4be4-afb0-d61db4bbd590"),
+                            SymbolId = new Guid("df32447c-7578-46af-a77a-73efd458c201"),
+                            SymbolPrice = 450,
+                            SymbolQuantity = 1370,
+                            UserId = new Guid("8d75d5bf-ea72-4f50-b72f-9e077a49518c")
+                        },
+                        new
+                        {
+                            UserSymbolPropertyId = new Guid("a7d97c83-0c10-45bf-94e7-05c43d59257a"),
+                            SymbolId = new Guid("c39734d9-125a-43fa-88fe-8e12a209f1b1"),
+                            SymbolPrice = 450,
+                            SymbolQuantity = 1370,
+                            UserId = new Guid("70e41be8-ee03-4ed7-aa9e-7ad3d3b367b7")
+                        },
+                        new
+                        {
+                            UserSymbolPropertyId = new Guid("61b5469a-ee2e-4083-ab6a-975c8d2e4fe3"),
+                            SymbolId = new Guid("df32447c-7578-46af-a77a-73efd458c201"),
+                            SymbolPrice = 450,
+                            SymbolQuantity = 1370,
+                            UserId = new Guid("43966394-6325-4e7d-a218-cf2d43faae24")
+                        });
                 });
 
-            modelBuilder.Entity("AspTechTrader.Core.Domain.Entities.UserSymbol", b =>
+            modelBuilder.Entity("AspTechTrader.Core.Domain.Entities.UserSymbolProperty", b =>
                 {
-                    b.HasOne("AspTechTrader.Core.Domain.Entities.Symbol", null)
-                        .WithMany("UserSymbols")
-                        .HasForeignKey("SymbolId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("AspTechTrader.Core.Domain.Entities.Symbol", "Symbol")
+                        .WithMany("UserSymbolProperties")
+                        .HasForeignKey("SymbolId");
 
-                    b.HasOne("AspTechTrader.Core.Domain.Entities.User", null)
-                        .WithMany("UserSymbols")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("AspTechTrader.Core.Domain.Entities.User", "User")
+                        .WithMany("UserSymbolProperties")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Symbol");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("AspTechTrader.Core.Domain.Entities.Symbol", b =>
                 {
-                    b.Navigation("UserSymbols");
+                    b.Navigation("UserSymbolProperties");
                 });
 
             modelBuilder.Entity("AspTechTrader.Core.Domain.Entities.User", b =>
                 {
-                    b.Navigation("UserSymbols");
+                    b.Navigation("UserSymbolProperties");
                 });
 #pragma warning restore 612, 618
         }

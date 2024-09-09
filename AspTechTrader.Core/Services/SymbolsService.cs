@@ -18,7 +18,14 @@ namespace AspTechTrader.Core.Services
             List<Symbol> symbols = await _symbolsRepository.GetAllSymbools();
 
             return symbols;
-
         }
+
+        public async Task<List<Symbol>> GetAllSymbolsWithRelatedUserSymbolProperty()
+        {
+            List<Symbol> symbolsWithRelatedUserSymbolProperty = await _symbolsRepository.GetAllSymbolsWithRelatedUserSymbolProperty();
+
+            return symbolsWithRelatedUserSymbolProperty;
+        }
+
     }
 }

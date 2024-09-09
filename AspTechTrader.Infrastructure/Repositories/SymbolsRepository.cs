@@ -2,7 +2,6 @@
 using AspTechTrader.Core.Domain.RepositoryContracts;
 using AspTechTrader.Infrastructure.AppDbContext;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace AspTechTrader.Infrastructure.Repositories
 {
@@ -10,7 +9,6 @@ namespace AspTechTrader.Infrastructure.Repositories
     {
         //private fields
         private readonly ApplicationDbContext _db;
-        private readonly ILogger _logger;
 
 
         // constructure
@@ -22,7 +20,16 @@ namespace AspTechTrader.Infrastructure.Repositories
 
         public async Task<List<Symbol>> GetAllSymbools()
         {
-            return await _db.Symbols.ToListAsync();
+            return await _db.Symbols
+                .ToListAsync();
+        }
+
+        public async Task<List<Symbol>> GetAllSymbolsWithRelatedUserSymbolProperty()
+        {
+            return await _db.Symbols
+                .Include(symbol => symbol.UserSymbolProperties)
+                .ThenInclude(userSymbolPropertie => userSymbolPropertie.User)
+                .ToListAsync();
         }
     }
 }

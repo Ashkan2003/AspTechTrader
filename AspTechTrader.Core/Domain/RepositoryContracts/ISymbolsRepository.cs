@@ -12,5 +12,12 @@ namespace AspTechTrader.Core.Domain.RepositoryContracts
         /// </summary>
         /// <returns>All symbols from db</returns>
         Task<List<Symbol>> GetAllSymbools();
+
+        /// <summary>
+        /// get all symbols with related userSymbolProperty
+        /// </summary>
+        /// <returns>all symbols with related userSymbolProperty</returns>
+        Task<List<Symbol>> GetAllSymbolsWithRelatedUserSymbolProperty();
+
     }
 }

@@ -28,7 +28,10 @@ namespace AspTechTrader.Core.Domain.Entities
 
 
         // relation
-        public List<User> Users { get; set; } = [];
-        public List<UserSymbol> UserSymbols { get; set; }
+        //public List<User> Users { get; set; } = [];
+        //public List<UserSymbol> UserSymbols { get; set; }
+
+        // relation 
+        public ICollection<UserSymbolProperty> UserSymbolProperties { get; set; }
     }
 }

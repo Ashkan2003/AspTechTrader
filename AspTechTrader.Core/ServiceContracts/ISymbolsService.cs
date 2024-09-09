@@ -12,5 +12,8 @@ namespace AspTechTrader.Core.ServiceContracts
         /// </summary>
         /// <returns>All symbols</returns>
         Task<List<Symbol>> GetAllSymbols();
+
+        Task<List<Symbol>> GetAllSymbolsWithRelatedUserSymbolProperty();
+
     }
 }

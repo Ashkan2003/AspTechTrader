@@ -17,7 +17,7 @@ namespace AspTechTrader.Core.ServiceContracts
 
         Task<bool> DeleteUserById(Guid? userId);
 
-        Task<User> AddSymbolToUserSymbolList(UserSymbol userSymbol);
+        //Task<User> AddSymbolToUserSymbolList(UserSymbol userSymbol);
 
     }
 }

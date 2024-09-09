@@ -90,23 +90,23 @@ namespace AspTechTrader.Api.Controllers
         }
 
 
-        [HttpPost("AddSymbolToUserSymbolList")]
-        public async Task<ActionResult> AddSymbol(UserSymbol userSymbol)
-        {
-            if (userSymbol == null)
-            {
-                return BadRequest("userSymbol object not supplied");
-            }
+        //[HttpPost("AddSymbolToUserSymbolList")]
+        //public async Task<ActionResult> AddSymbol(UserSymbol userSymbol)
+        //{
+        //    if (userSymbol == null)
+        //    {
+        //        return BadRequest("userSymbol object not supplied");
+        //    }
 
-            if (userSymbol.UserId == Guid.Empty && userSymbol.SymbolId == Guid.Empty)
-            {
-                return BadRequest("userId or symbolId not supplied");
-            }
+        //    if (userSymbol.UserId == Guid.Empty && userSymbol.SymbolId == Guid.Empty)
+        //    {
+        //        return BadRequest("userId or symbolId not supplied");
+        //    }
 
-            User updatedUser = await _userService.AddSymbolToUserSymbolList(userSymbol);
+        //    User updatedUser = await _userService.AddSymbolToUserSymbolList(userSymbol);
 
-            return Ok(updatedUser);
+        //    return Ok(updatedUser);
 
-        }
+        //}
     }
 }

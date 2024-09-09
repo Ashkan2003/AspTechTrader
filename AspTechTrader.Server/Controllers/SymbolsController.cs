@@ -24,36 +24,21 @@ namespace AspTechTrader.Api.Controllers
 
 
         [HttpGet("getSymbols")] // https://localhost:7007/api/Symbols/getSymbols
-        public async Task<ActionResult<List<Symbol>>> Get()
+        public async Task<ActionResult<List<Symbol>>> GetAllSymbols()
         {
             List<Symbol> symbols = await _symbolsService.GetAllSymbols();
 
             return symbols;
         }
 
-        // GET api/<SymbolsController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("getSymbolsWithRelatedUserSymbolProperty")] // https://localhost:7007/api/Symbols/getSymbols
+        public async Task<ActionResult<List<Symbol>>> GetsymbolsWithRelatedUserSymbolProperty()
         {
-            return "value";
+            List<Symbol> symbolsWithRelatedUserSymbolProperty = await _symbolsService.GetAllSymbolsWithRelatedUserSymbolProperty();
+
+            return symbolsWithRelatedUserSymbolProperty;
         }
 
-        // POST api/<SymbolsController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
 
-        // PUT api/<SymbolsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<SymbolsController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
