@@ -26,10 +26,11 @@ namespace AspTechTrader.Api
             builder.Services.AddScoped<ISymbolsService, SymbolsService>();
             builder.Services.AddScoped<IUserService, UsersService>();
             builder.Services.AddScoped<IUserSymbolPropertyService, UserSymbolPropertyService>();
+            builder.Services.AddScoped<IUserWatchListsService, UserWatchListsService>();
             builder.Services.AddScoped<ISymbolsRepository, SymbolsRepository>();
             builder.Services.AddScoped<IUsersRepository, UsersRepository>();
             builder.Services.AddScoped<IUserSymbolPropertyRepository, UserSymbolPropertyRepository>();
-
+            builder.Services.AddScoped<IUserWatchListsRepository, UserWatchListsRepository>();
 
             builder.Services.AddControllers().AddJsonOptions(options =>
             {

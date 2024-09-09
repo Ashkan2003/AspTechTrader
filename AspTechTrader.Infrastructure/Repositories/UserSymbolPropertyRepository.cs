@@ -27,43 +27,33 @@ namespace AspTechTrader.Infrastructure.Repositories
 
             User? matchedUser = await _db.Users
                 .Include(user => user.UserSymbolProperties)
+                .ThenInclude(userSymbolProperty => userSymbolProperty.Symbol)
                 .FirstOrDefaultAsync(temp => temp.UserId == userBoughtSymbolAddRequest.UserId);
-
-            //Symbol? matchedSymbol = await _db.Symbols
-            //    //.Include(symbol => symbol.UserSymbolProperties)
-            //    .FirstOrDefaultAsync(temp => temp.SymbolId == userBoughtSymbolAddRequest.SymbolId);
 
             if (matchedUser == null)
             {
                 throw new Exception("there is no user with the given userId");
             }
 
-            //if (matchedSymbol == null)
-            //{
-            //    throw new Exception("there is no symbol with the given symbolId");
-            //}
-            // _db.Entry(matchedUser).State = EntityState.Modified; // added row
 
-            UserSymbolProperty userSymbolPropertytoAdd = new UserSymbolProperty()
+            UserSymbolProperty? matchedSymbol = matchedUser.UserSymbolProperties.FirstOrDefault(temp => temp.SymbolId == userBoughtSymbolAddRequest.SymbolId);
+
+            if (matchedSymbol != null)
+            {
+                throw new Exception("user already have this symbol");
+            }
+
+            _db.UserSymbolProperties.Add(new UserSymbolProperty()
             {
                 UserSymbolPropertyId = Guid.NewGuid(),
 
                 SymbolPrice = userBoughtSymbolAddRequest.SymbolPrice,
                 SymbolQuantity = userBoughtSymbolAddRequest.SymbolQuantity,
-                UserId = userBoughtSymbolAddRequest.UserId
-            };
+                UserId = userBoughtSymbolAddRequest.UserId,
+                SymbolId = userBoughtSymbolAddRequest.SymbolId,
+            });
 
 
-
-            //matchedUser.UserSymbolProperties.Add(new UserSymbolProperty()
-            //{
-            //    UserSymbolPropertyId = Guid.NewGuid(),
-
-            //    SymbolPrice = userBoughtSymbolAddRequest.SymbolPrice,
-            //    SymbolQuantity = userBoughtSymbolAddRequest.SymbolQuantity,
-            //});
-            matchedUser.UserSymbolProperties.Append(userSymbolPropertytoAdd);
-          //  _db.Entry(matchedUser).CurrentValues.SetValues(matchedUser.UserSymbolProperties);
 
             var count = await _db.SaveChangesAsync();
 

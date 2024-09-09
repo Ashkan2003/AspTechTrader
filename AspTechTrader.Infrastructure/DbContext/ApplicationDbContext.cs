@@ -17,6 +17,8 @@ namespace AspTechTrader.Infrastructure.AppDbContext
 
         public virtual DbSet<UserSymbolProperty> UserSymbolProperties { get; set; }
 
+        public virtual DbSet<UserWatchList> UserWatchLists { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -30,6 +32,11 @@ namespace AspTechTrader.Infrastructure.AppDbContext
             modelBuilder.Entity<User>().ToTable("User");
             modelBuilder.Entity<Symbol>().ToTable("Symbol");
             modelBuilder.Entity<UserSymbolProperty>().ToTable("UserSymbolProperty");
+
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.UserWatchLists)
+                .WithOne(e => e.User)
+                .HasForeignKey(e => e.UserId);
 
 
             //modelBuilder.Entity<User>()
@@ -158,6 +165,33 @@ namespace AspTechTrader.Infrastructure.AppDbContext
             };
 
             modelBuilder.Entity<UserSymbolProperty>().HasData(userSymbolProperties);
+
+            //seed userWatchList data
+            List<UserWatchList> userWatchLists = new List<UserWatchList>()
+            {
+               new UserWatchList()
+               {
+                   UserWatchListId = Guid.Parse("BC9E6EA8-F280-476E-8502-8D96926CDE3E"),
+                   userWatchListName = "سهام من",
+                   UserId= Guid.Parse("43966394-6325-4E7D-A218-CF2D43FAAE24"),
+               },
+               new UserWatchList()
+               {
+                   UserWatchListId = Guid.Parse("DBB733B5-86E1-4B9B-B1D7-E9D26D77165D"),
+                   userWatchListName = "سهامppppp",
+                   UserId= Guid.Parse("43966394-6325-4E7D-A218-CF2D43FAAE24"),
+               },
+            };
+
+            modelBuilder.Entity<UserWatchList>().HasData(userWatchLists);
+
+
+
+
+
+
+
+
         }
 
 

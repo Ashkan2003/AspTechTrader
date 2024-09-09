@@ -31,7 +31,7 @@ namespace AspTechTrader.Api.Controllers
             return symbols;
         }
 
-        [HttpGet("getSymbolsWithRelatedUserSymbolProperty")] // https://localhost:7007/api/Symbols/getSymbols
+        [HttpGet("getSymbolsWithRelatedUserSymbolProperty")] // 
         public async Task<ActionResult<List<Symbol>>> GetsymbolsWithRelatedUserSymbolProperty()
         {
             List<Symbol> symbolsWithRelatedUserSymbolProperty = await _symbolsService.GetAllSymbolsWithRelatedUserSymbolProperty();

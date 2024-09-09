@@ -21,6 +21,9 @@ namespace AspTechTrader.Core.Domain.Entities
         //relation one to many
         public ICollection<UserSymbolProperty> UserSymbolProperties { get; set; }
 
+        // relation one to many with userWatchList
+        public ICollection<UserWatchList> UserWatchLists { get; set; } = new List<UserWatchList>();
+
         //relation many-to-many
         //public List<Symbol> Symbols { get; set; } = [];
         //public List<UserSymbol> UserSymbols { get; set; }
