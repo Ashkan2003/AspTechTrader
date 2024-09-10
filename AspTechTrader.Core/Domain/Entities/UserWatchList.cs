@@ -12,10 +12,13 @@ namespace AspTechTrader.Core.Domain.Entities
 
 
 
-        // relation
+        // relation with User
         public Guid UserId { get; set; }
 
         public User User { get; set; }
+
+        // relation with symbol 
+        public List<Symbol> Symbols { get; set; } = [];
 
     }
 }

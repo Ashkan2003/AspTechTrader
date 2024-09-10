@@ -1,6 +1,7 @@
 ﻿using AspTechTrader.Core.Domain.Entities;
 using AspTechTrader.Core.Domain.RepositoryContracts;
 using AspTechTrader.Core.DTO;
+using AspTechTrader.Core.Helpers;
 using AspTechTrader.Core.ServiceContracts;
 
 namespace AspTechTrader.Core.Services
@@ -50,6 +51,22 @@ namespace AspTechTrader.Core.Services
             User matchedUser = await _userWatchListsRepository.GetUserWithRelatedUserWatchListById(userWatchListAddRequest.UserId);
 
             return await _userWatchListsRepository.AddNewUserWatchList(userWatchListAddRequest);
+        }
+
+        public async Task<UserWatchList?> AddNewSymbolToUserWatchList(AddSymbolToUserWatchListRequestDTO addSymbolToUserWatchListRequestDTO)
+        {
+            if (addSymbolToUserWatchListRequestDTO == null)
+            {
+                throw new ArgumentNullException(nameof(addSymbolToUserWatchListRequestDTO));
+            }
+
+            //Model validation
+            ValidationHelper.ModelValidation(addSymbolToUserWatchListRequestDTO);
+
+            UserWatchList? matchedUserWatchList = await _userWatchListsRepository.AddNewSymbolToUserWatchList(addSymbolToUserWatchListRequestDTO);
+
+            return matchedUserWatchList;
+
         }
     }
 }

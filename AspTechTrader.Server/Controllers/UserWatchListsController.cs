@@ -41,7 +41,7 @@ namespace AspTechTrader.Api.Controllers
         }
 
         [HttpPost("AddNewWatchList")]
-        public async Task<ActionResult> Post(UserWatchListAddRequestDTO userWatchListAddRequest)
+        public async Task<ActionResult> PostNewWatchList(UserWatchListAddRequestDTO userWatchListAddRequest)
         {
             if (userWatchListAddRequest == null)
             {
@@ -67,5 +67,23 @@ namespace AspTechTrader.Api.Controllers
             return Ok(user);
         }
 
+
+        [HttpPost("AddNewSymbolToGivenUserWatchList")]
+        public async Task<ActionResult> PostNewSymbolToWatchList(AddSymbolToUserWatchListRequestDTO addSymbolToUserWatchListRequestDTO)
+        {
+            if (addSymbolToUserWatchListRequestDTO == null)
+            {
+                return BadRequest("addSymbolToUserWatchListRequestDTO not supplied");
+            }
+
+            UserWatchList? matchedUserWatchLIst = await _userWatchListsService.AddNewSymbolToUserWatchList(addSymbolToUserWatchListRequestDTO);
+
+            if (matchedUserWatchLIst == null)
+            {
+                return Problem("cant add the given symbol to the given UserWatchList");
+            }
+
+            return Ok(matchedUserWatchLIst);
+        }
     }
 }

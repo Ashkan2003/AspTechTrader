@@ -39,6 +39,11 @@ namespace AspTechTrader.Infrastructure.AppDbContext
                 .HasForeignKey(e => e.UserId);
 
 
+            modelBuilder.Entity<UserWatchList>()
+                .HasMany(e => e.Symbols)
+                .WithMany(e => e.UserWatchList);
+
+
             //modelBuilder.Entity<User>()
             //    .HasMany(e => e.UserSymbolProperties)
             //    .WithOne(e => e.User)

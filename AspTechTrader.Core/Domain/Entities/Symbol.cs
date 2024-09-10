@@ -33,5 +33,8 @@ namespace AspTechTrader.Core.Domain.Entities
 
         // relation 
         public ICollection<UserSymbolProperty> UserSymbolProperties { get; set; }
+
+        // relation
+        public List<UserWatchList> UserWatchList { get; set; } = [];
     }
 }

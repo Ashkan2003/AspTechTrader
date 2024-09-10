@@ -9,5 +9,7 @@ namespace AspTechTrader.Core.ServiceContracts
 
         Task<User> AddNewUserWatchList(UserWatchListAddRequestDTO userWatchListAddRequest);
 
+        Task<UserWatchList?> AddNewSymbolToUserWatchList(AddSymbolToUserWatchListRequestDTO addSymbolToUserWatchListRequestDTO);
+
     }
 }

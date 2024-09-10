@@ -1,6 +1,7 @@
 ﻿using AspTechTrader.Core.Domain.Entities;
 using AspTechTrader.Core.Domain.RepositoryContracts;
 using AspTechTrader.Infrastructure.AppDbContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace AspTechTrader.Infrastructure.Repositories
 {
@@ -8,18 +9,20 @@ namespace AspTechTrader.Infrastructure.Repositories
     {
 
         private readonly ApplicationDbContext _db;
-        private readonly IUsersRepository _usersRepository;
 
-        public UserSymbolPropertyRepository(ApplicationDbContext db, IUsersRepository usersRepository)
+        public UserSymbolPropertyRepository(ApplicationDbContext db)
         {
             _db = db;
-            _usersRepository = usersRepository;
+
         }
 
         public async Task<User> AddNewBoughtSymbol(UserSymbolProperty userSymbolProperty)
         {
 
-            User? matchedUser = await _usersRepository.GetUserById(userSymbolProperty.UserId.Value);
+            User? matchedUser = await _db.Users
+                .Include(u => u.UserSymbolProperties)
+                .ThenInclude(u => u.Symbol)
+                .FirstOrDefaultAsync(temp => temp.UserId == userSymbolProperty.UserId);
 
             matchedUser.UserSymbolProperties.Add(userSymbolProperty);
 

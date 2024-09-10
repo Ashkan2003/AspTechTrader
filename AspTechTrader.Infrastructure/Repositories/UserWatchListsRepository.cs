@@ -19,6 +19,7 @@ namespace AspTechTrader.Infrastructure.Repositories
         {
             User? MatchedUser = await _db.Users
                    .Include(u => u.UserWatchLists)
+                   .ThenInclude(u => u.Symbols)
                    .FirstOrDefaultAsync(u => u.UserId == userId);
 
             return MatchedUser;
@@ -44,6 +45,38 @@ namespace AspTechTrader.Infrastructure.Repositories
             await _db.SaveChangesAsync();
 
             return matchedUser;
+        }
+
+        public async Task<UserWatchList?> AddNewSymbolToUserWatchList(AddSymbolToUserWatchListRequestDTO addSymbolToUserWatchListRequestDTO)
+        {
+            UserWatchList? matchedUserWatchList = await _db.UserWatchLists
+                .Include(u => u.Symbols)
+                .FirstOrDefaultAsync(temp => temp.UserWatchListId == addSymbolToUserWatchListRequestDTO.UserWatchListId);
+
+            Symbol? matchedSymbol = await _db.Symbols.FirstOrDefaultAsync(temp => temp.SymbolId == addSymbolToUserWatchListRequestDTO.SymbolId);
+
+            if (matchedUserWatchList == null)
+            {
+                throw new ArgumentNullException("there is no related userwatchList with the given userWatchListId");
+            }
+
+            if (matchedSymbol == null)
+            {
+                throw new ArgumentNullException("there is no related symbol with the given simbolId");
+            }
+
+            bool isSymbolInUserWatchList = matchedUserWatchList.Symbols.Contains(matchedSymbol);
+
+            if (isSymbolInUserWatchList == true)
+            {
+                throw new Exception("this symbol allready exists in userWatchList");
+            }
+
+            matchedUserWatchList.Symbols.Add(matchedSymbol);
+
+            await _db.SaveChangesAsync();
+
+            return matchedUserWatchList;
         }
     }
 }
