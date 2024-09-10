@@ -30,6 +30,7 @@ namespace AspTechTrader.Infrastructure.Repositories
                 .ThenInclude(userSymbolProperty => userSymbolProperty.Symbol)
                 .FirstOrDefaultAsync(temp => temp.UserId == userBoughtSymbolAddRequest.UserId);
 
+          
             if (matchedUser == null)
             {
                 throw new Exception("there is no user with the given userId");
@@ -43,14 +44,15 @@ namespace AspTechTrader.Infrastructure.Repositories
                 throw new Exception("user already have this symbol");
             }
 
-            _db.UserSymbolProperties.Add(new UserSymbolProperty()
-            {
-                UserSymbolPropertyId = Guid.NewGuid(),
 
+
+            matchedUser.UserSymbolProperties.Add(new UserSymbolProperty()
+            {
                 SymbolPrice = userBoughtSymbolAddRequest.SymbolPrice,
                 SymbolQuantity = userBoughtSymbolAddRequest.SymbolQuantity,
-                UserId = userBoughtSymbolAddRequest.UserId,
-                SymbolId = userBoughtSymbolAddRequest.SymbolId,
+
+                UserId = matchedUser.UserId,
+                SymbolId = userBoughtSymbolAddRequest.SymbolId
             });
 
 
