@@ -27,5 +27,16 @@ namespace AspTechTrader.Core.Services
             return symbolsWithRelatedUserSymbolProperty;
         }
 
+        public async Task<Symbol?> GetSymbolById(Guid SymbolId)
+        {
+            if (SymbolId == Guid.Empty)
+            {
+                throw new ArgumentNullException(nameof(SymbolId));
+            }
+
+            Symbol? matchedSymbol = await _symbolsRepository.GetSymbolById(SymbolId);
+
+            return matchedSymbol;
+        }
     }
 }

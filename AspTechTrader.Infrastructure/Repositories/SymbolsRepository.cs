@@ -31,5 +31,10 @@ namespace AspTechTrader.Infrastructure.Repositories
                 .ThenInclude(userSymbolPropertie => userSymbolPropertie.User)
                 .ToListAsync();
         }
+
+        public async Task<Symbol?> GetSymbolById(Guid SymbolId)
+        {
+            return await _db.Symbols.FirstOrDefaultAsync(temp => temp.SymbolId == SymbolId);
+        }
     }
 }

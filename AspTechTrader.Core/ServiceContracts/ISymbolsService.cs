@@ -15,5 +15,8 @@ namespace AspTechTrader.Core.ServiceContracts
 
         Task<List<Symbol>> GetAllSymbolsWithRelatedUserSymbolProperty();
 
+        Task<Symbol?> GetSymbolById(Guid SymbolId);
+
+
     }
 }

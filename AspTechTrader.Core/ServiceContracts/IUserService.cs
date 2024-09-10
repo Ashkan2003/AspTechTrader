@@ -10,6 +10,9 @@ namespace AspTechTrader.Core.ServiceContracts
     {
         Task<User?> GetUserById(Guid? userId);
 
+        Task<User?> GetUserByEmail(string emailAddress);
+
+
         Task<User> AddUser(UserAddRequestDTO? userAddRequest);
 
 

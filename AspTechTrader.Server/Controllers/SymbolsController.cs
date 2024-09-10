@@ -39,6 +39,23 @@ namespace AspTechTrader.Api.Controllers
             return symbolsWithRelatedUserSymbolProperty;
         }
 
+        [HttpGet("getSymbolById")]
 
+        public async Task<ActionResult> GetSymbolById(string SymbolId)
+        {
+            if (string.IsNullOrWhiteSpace(SymbolId))
+            {
+                return BadRequest("the symbolId was not supplied");
+            }
+
+            Symbol? matchedSymbol = await _symbolsService.GetSymbolById(Guid.Parse(SymbolId));
+
+            if (matchedSymbol == null)
+            {
+                return NotFound("no symbol founded with the given SymbolId");
+            }
+
+            return Ok(matchedSymbol);
+        }
     }
 }

@@ -19,5 +19,8 @@ namespace AspTechTrader.Core.Domain.RepositoryContracts
         /// <returns>all symbols with related userSymbolProperty</returns>
         Task<List<Symbol>> GetAllSymbolsWithRelatedUserSymbolProperty();
 
+
+        Task<Symbol?> GetSymbolById(Guid SymbolId);
+
     }
 }

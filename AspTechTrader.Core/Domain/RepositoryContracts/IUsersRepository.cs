@@ -14,6 +14,9 @@ namespace AspTechTrader.Core.Domain.RepositoryContracts
         /// <returns>uniq user</returns>
         Task<User?> GetUserById(Guid userId);
 
+        Task<User?> GetUserByEmail(string emailAddress);
+
+
         /// <summary>
         /// add user to bd
         /// </summary>

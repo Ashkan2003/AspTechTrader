@@ -23,10 +23,19 @@ namespace AspTechTrader.Infrastructure.Repositories
             User? matchedUser = await _db.Users
                  .Include(user => user.UserSymbolProperties)
                  .ThenInclude(userSymbolProperty => userSymbolProperty.Symbol)
+                 .Include(user => user.UserWatchLists)
                  .FirstOrDefaultAsync((temp) => temp.UserId == userId);
 
             return matchedUser;
         }
+
+        public async Task<User?> GetUserByEmail(string emailAddress)
+        {
+            User? matchedUser = await _db.Users.FirstOrDefaultAsync(temp => temp.EmailAddress == emailAddress);
+
+            return matchedUser;
+        }
+
 
         public async Task<User> AddUser(User user)
         {

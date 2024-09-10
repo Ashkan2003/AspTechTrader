@@ -1,8 +1,6 @@
 ﻿using AspTechTrader.Core.Domain.Entities;
 using AspTechTrader.Core.Domain.RepositoryContracts;
-using AspTechTrader.Core.DTO;
 using AspTechTrader.Infrastructure.AppDbContext;
-using Microsoft.EntityFrameworkCore;
 
 namespace AspTechTrader.Infrastructure.Repositories
 {
@@ -10,52 +8,20 @@ namespace AspTechTrader.Infrastructure.Repositories
     {
 
         private readonly ApplicationDbContext _db;
+        private readonly IUsersRepository _usersRepository;
 
-
-        public UserSymbolPropertyRepository(ApplicationDbContext db)
+        public UserSymbolPropertyRepository(ApplicationDbContext db, IUsersRepository usersRepository)
         {
             _db = db;
+            _usersRepository = usersRepository;
         }
 
-        public async Task<User> AddNewBoughtSymbol(UserBoughtSymbolAddRequestDTO userBoughtSymbolAddRequest)
+        public async Task<User> AddNewBoughtSymbol(UserSymbolProperty userSymbolProperty)
         {
 
-            if (userBoughtSymbolAddRequest == null)
-            {
-                throw new ArgumentNullException(nameof(userBoughtSymbolAddRequest));
-            }
+            User? matchedUser = await _usersRepository.GetUserById(userSymbolProperty.UserId.Value);
 
-            User? matchedUser = await _db.Users
-                .Include(user => user.UserSymbolProperties)
-                .ThenInclude(userSymbolProperty => userSymbolProperty.Symbol)
-                .FirstOrDefaultAsync(temp => temp.UserId == userBoughtSymbolAddRequest.UserId);
-
-          
-            if (matchedUser == null)
-            {
-                throw new Exception("there is no user with the given userId");
-            }
-
-
-            UserSymbolProperty? matchedSymbol = matchedUser.UserSymbolProperties.FirstOrDefault(temp => temp.SymbolId == userBoughtSymbolAddRequest.SymbolId);
-
-            if (matchedSymbol != null)
-            {
-                throw new Exception("user already have this symbol");
-            }
-
-
-
-            matchedUser.UserSymbolProperties.Add(new UserSymbolProperty()
-            {
-                SymbolPrice = userBoughtSymbolAddRequest.SymbolPrice,
-                SymbolQuantity = userBoughtSymbolAddRequest.SymbolQuantity,
-
-                UserId = matchedUser.UserId,
-                SymbolId = userBoughtSymbolAddRequest.SymbolId
-            });
-
-
+            matchedUser.UserSymbolProperties.Add(userSymbolProperty);
 
             var count = await _db.SaveChangesAsync();
 

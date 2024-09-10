@@ -27,6 +27,16 @@ namespace AspTechTrader.Api.Controllers
                 return BadRequest("userSymbolProperty was not supplied");
             }
 
+            if (userBoughtSymbolAddRequest.UserId == Guid.Empty)
+            {
+                return BadRequest("userId was not supplied");
+            }
+
+            if (userBoughtSymbolAddRequest.SymbolId == Guid.Empty)
+            {
+                return BadRequest("symbolId was not supplied");
+            }
+
             User user = await _userSymbolPropertyService.AddNewBoughtSymbol(userBoughtSymbolAddRequest);
             return Ok(User);
 

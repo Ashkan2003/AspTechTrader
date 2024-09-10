@@ -36,6 +36,19 @@ namespace AspTechTrader.Core.Services
 
         }
 
+        public async Task<User?> GetUserByEmail(string emailAddress)
+        {
+            if (emailAddress == null)
+            {
+                throw new ArgumentNullException(nameof(emailAddress));
+            }
+
+            User? matchedUser = await _usersRepository.GetUserByEmail(emailAddress);
+
+            return matchedUser;
+        }
+
+
         public async Task<bool> DeleteUserById(Guid? userId)
         {
             if (userId == Guid.Empty)
@@ -66,6 +79,15 @@ namespace AspTechTrader.Core.Services
 
             //Model validation
             ValidationHelper.ModelValidation(userAddRequest);
+
+
+            // check for the duplicate user in db
+            User? matchedUser = await _usersRepository.GetUserByEmail(userAddRequest.EmailAddress);
+
+            if (matchedUser != null)
+            {
+                throw new Exception("a user exists with the given gmail in db");
+            }
 
             User user = new User()
             {
