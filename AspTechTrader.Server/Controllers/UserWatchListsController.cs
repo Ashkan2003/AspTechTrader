@@ -67,6 +67,24 @@ namespace AspTechTrader.Api.Controllers
             return Ok(user);
         }
 
+        [HttpDelete("DeleteUserWatchList")]
+        public async Task<ActionResult> DeleteUserWatchLIst(UserWatchListDeleteRequestDTO userWatchListDeleteRequestDTO)
+        {
+            if (userWatchListDeleteRequestDTO == null)
+            {
+                return BadRequest("userWatchListDeleteRequestDTO was not supplied");
+            }
+
+            bool isDeleted = await _userWatchListsService.DeleteUserWatchList(userWatchListDeleteRequestDTO);
+
+            if (!isDeleted)
+            {
+                return Problem("cant delete userWatchList");
+            }
+
+            return Ok(true);
+        }
+
 
         [HttpPost("AddNewSymbolToGivenUserWatchList")]
         public async Task<ActionResult> PostNewSymbolToWatchList(AddSymbolToUserWatchListRequestDTO addSymbolToUserWatchListRequestDTO)
@@ -84,6 +102,24 @@ namespace AspTechTrader.Api.Controllers
             }
 
             return Ok(matchedUserWatchLIst);
+        }
+
+        [HttpDelete("RemoveSymbolFromUserWatchList")]
+        public async Task<ActionResult> DeleteSymbolFromUserWatchList(RemoveSymbolFromUserWatchListDTO removeSymbolFromUserWatchListDTO)
+        {
+            if (removeSymbolFromUserWatchListDTO == null)
+            {
+                return BadRequest("RemoveSymbolFromUserWatchListDTO was not supplied");
+            }
+
+            bool isSuccessfullyRemoved = await _userWatchListsService.RemoveSymbolFromUserWatchList(removeSymbolFromUserWatchListDTO);
+
+            if (!isSuccessfullyRemoved)
+            {
+                return Problem("cant delete symbol from watchList");
+            }
+
+            return Ok(isSuccessfullyRemoved);
         }
     }
 }

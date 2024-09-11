@@ -5,11 +5,19 @@ namespace AspTechTrader.Core.Domain.RepositoryContracts
 {
     public interface IUserWatchListsRepository
     {
-        Task<User> GetUserWithRelatedUserWatchListById(Guid userId);
+        Task<User?> GetUserWithRelatedUserWatchListById(Guid userId);
+
+        Task<UserWatchList?> GetUserWatchListById(Guid userWatchListId);
+
 
         Task<User> AddNewUserWatchList(UserWatchListAddRequestDTO userWatchListAddRequest);
 
+        Task<bool> DeleteUserWatchList(UserWatchListDeleteRequestDTO userWatchListDeleteRequestDTO);
+
+
         Task<UserWatchList?> AddNewSymbolToUserWatchList(AddSymbolToUserWatchListRequestDTO addSymbolToUserWatchListRequestDTO);
+
+        Task<bool> RemoveSymbolFromUserWatchList(RemoveSymbolFromUserWatchListDTO removeSymbolFromUserWatchListDTO);
 
     }
 }

@@ -48,10 +48,26 @@ namespace AspTechTrader.Core.Services
                 throw new ArithmeticException(nameof(userWatchListAddRequest.UserId));
             }
 
-            User matchedUser = await _userWatchListsRepository.GetUserWithRelatedUserWatchListById(userWatchListAddRequest.UserId);
+            User? matchedUser = await _userWatchListsRepository.GetUserWithRelatedUserWatchListById(userWatchListAddRequest.UserId);
 
             return await _userWatchListsRepository.AddNewUserWatchList(userWatchListAddRequest);
         }
+
+        public async Task<bool> DeleteUserWatchList(UserWatchListDeleteRequestDTO userWatchListDeleteRequestDTO)
+        {
+            if (userWatchListDeleteRequestDTO == null)
+            {
+                throw new ArgumentNullException(nameof(userWatchListDeleteRequestDTO));
+            }
+
+            ValidationHelper.ModelValidation(userWatchListDeleteRequestDTO);
+
+            bool isDeleted = await _userWatchListsRepository.DeleteUserWatchList(userWatchListDeleteRequestDTO);
+
+            return isDeleted;
+
+        }
+
 
         public async Task<UserWatchList?> AddNewSymbolToUserWatchList(AddSymbolToUserWatchListRequestDTO addSymbolToUserWatchListRequestDTO)
         {
@@ -67,6 +83,21 @@ namespace AspTechTrader.Core.Services
 
             return matchedUserWatchList;
 
+        }
+
+        public async Task<bool> RemoveSymbolFromUserWatchList(RemoveSymbolFromUserWatchListDTO removeSymbolFromUserWatchListDTO)
+        {
+            if (removeSymbolFromUserWatchListDTO == null)
+            {
+                throw new ArgumentNullException(nameof(removeSymbolFromUserWatchListDTO));
+            }
+
+            //Model validation
+            ValidationHelper.ModelValidation(removeSymbolFromUserWatchListDTO);
+
+            bool isSuccessfullyRemoved = await _userWatchListsRepository.RemoveSymbolFromUserWatchList(removeSymbolFromUserWatchListDTO);
+
+            return isSuccessfullyRemoved;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace AspTechTrader.Infrastructure.Repositories
             _db = db;
         }
 
-        public async Task<User> GetUserWithRelatedUserWatchListById(Guid userId)
+        public async Task<User?> GetUserWithRelatedUserWatchListById(Guid userId)
         {
             User? MatchedUser = await _db.Users
                    .Include(u => u.UserWatchLists)
@@ -25,9 +25,18 @@ namespace AspTechTrader.Infrastructure.Repositories
             return MatchedUser;
         }
 
+        public async Task<UserWatchList?> GetUserWatchListById(Guid userWatchListId)
+        {
+            UserWatchList? matchedUserWatchList = await _db.UserWatchLists
+             .Include(u => u.Symbols)
+             .FirstOrDefaultAsync(temp => temp.UserWatchListId == userWatchListId);
+
+            return matchedUserWatchList;
+        }
+
         public async Task<User> AddNewUserWatchList(UserWatchListAddRequestDTO userWatchListAddRequest)
         {
-            User matchedUser = await GetUserWithRelatedUserWatchListById(userWatchListAddRequest.UserId);
+            User? matchedUser = await GetUserWithRelatedUserWatchListById(userWatchListAddRequest.UserId);
 
             if (matchedUser == null)
             {
@@ -47,11 +56,32 @@ namespace AspTechTrader.Infrastructure.Repositories
             return matchedUser;
         }
 
+        public async Task<bool> DeleteUserWatchList(UserWatchListDeleteRequestDTO userWatchListDeleteRequestDTO)
+        {
+            User? matchedUser = await GetUserWithRelatedUserWatchListById(userWatchListDeleteRequestDTO.UserId);
+
+            UserWatchList? matchedUserWatchList = await GetUserWatchListById(userWatchListDeleteRequestDTO.UserWatchListId);
+
+            if (matchedUser == null)
+            {
+                throw new Exception("no user founded with the given user id");
+            }
+
+            if (matchedUserWatchList == null)
+            {
+                throw new NullReferenceException("no userWatch List founded with the given id");
+            }
+
+            bool isDeleted = matchedUser.UserWatchLists.Remove(matchedUserWatchList);
+
+            await _db.SaveChangesAsync();
+
+            return isDeleted;
+        }
+
         public async Task<UserWatchList?> AddNewSymbolToUserWatchList(AddSymbolToUserWatchListRequestDTO addSymbolToUserWatchListRequestDTO)
         {
-            UserWatchList? matchedUserWatchList = await _db.UserWatchLists
-                .Include(u => u.Symbols)
-                .FirstOrDefaultAsync(temp => temp.UserWatchListId == addSymbolToUserWatchListRequestDTO.UserWatchListId);
+            UserWatchList? matchedUserWatchList = await GetUserWatchListById(addSymbolToUserWatchListRequestDTO.UserWatchListId);
 
             Symbol? matchedSymbol = await _db.Symbols.FirstOrDefaultAsync(temp => temp.SymbolId == addSymbolToUserWatchListRequestDTO.SymbolId);
 
@@ -77,6 +107,28 @@ namespace AspTechTrader.Infrastructure.Repositories
             await _db.SaveChangesAsync();
 
             return matchedUserWatchList;
+        }
+
+        public async Task<bool> RemoveSymbolFromUserWatchList(RemoveSymbolFromUserWatchListDTO removeSymbolFromUserWatchListDTO)
+        {
+            UserWatchList? matchedUserWatchList = await GetUserWatchListById(removeSymbolFromUserWatchListDTO.UserWatchListId);
+
+            Symbol? matchedSymbol = await _db.Symbols.FirstOrDefaultAsync(temp => temp.SymbolId == removeSymbolFromUserWatchListDTO.SymbolId);
+
+            if (matchedUserWatchList == null)
+            {
+                throw new ArgumentNullException("there is no related userwatchList with the given userWatchListId");
+            }
+
+            if (matchedSymbol == null)
+            {
+                throw new ArgumentNullException("there is no related symbol with the given simbolId");
+            }
+
+            bool isRemovedSuccessfully = matchedUserWatchList.Symbols.Remove(matchedSymbol);
+            await _db.SaveChangesAsync();
+
+            return isRemovedSuccessfully;
         }
     }
 }

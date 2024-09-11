@@ -24,6 +24,7 @@ namespace AspTechTrader.Infrastructure.Repositories
                  .Include(user => user.UserSymbolProperties)
                  .ThenInclude(userSymbolProperty => userSymbolProperty.Symbol)
                  .Include(user => user.UserWatchLists)
+                 .ThenInclude(userWatchList => userWatchList.Symbols)
                  .FirstOrDefaultAsync((temp) => temp.UserId == userId);
 
             return matchedUser;
