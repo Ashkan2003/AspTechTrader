@@ -6,6 +6,7 @@ import QueryClientProvider from './QueryClientProvider.tsx';
 import { ReduxProvider } from './GlobalRedux/provider.tsx';
 import CustomThemeProvider from './MaterialUiThemeProvider.tsx';
 import { Toaster } from 'react-hot-toast';
+import Register from './pages/Register.tsx';
 
 
 
@@ -17,6 +18,10 @@ import { Toaster } from 'react-hot-toast';
         {
             path: "/Login",
             element: <Login />,
+        },
+        {
+            path: "/Register",
+            element: <Register/>
         }
     ]);
 

@@ -1,31 +1,28 @@
-"use client";
 import {
   Typography,
   IconButton,
   Divider,
-  Skeleton,
+  //Skeleton,
   Menu,
-  MenuItem,
+  //MenuItem,
 } from "@mui/material";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
 import SettingsSuggestOutlinedIcon from "@mui/icons-material/SettingsSuggestOutlined";
 import PowerSettingsNewRoundedIcon from "@mui/icons-material/PowerSettingsNewRounded";
 import { useState } from "react";
-
+import { Link } from 'react-router-dom';
 // this component is for rendering the Auth-state of the user in the navbar such as login, signup, logout and user-avatar
 const NavAuthState = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // this is for the menu-component
-  const { status, data: session } = useSession(); // the useSession hook is for geting user  authstatus in the client
+  //const { status, data: session } = useSession(); // the useSession hook is for geting user  authstatus in the client
 
   // console.log(session,"ggg")
-  if (status == "loading")
-    return (
-      <div className="flex items-center ps-3">
-        <Skeleton variant="rounded" sx={{display:{xs:"none",md:"block"}}} width={120} height={40} />
-        <Skeleton variant="circular" width={35} height={35} />
-      </div>
-    );
+  //if (status == "loading")
+  //  return (
+  //    <div className="flex items-center ps-3">
+  //      <Skeleton variant="rounded" sx={{display:{xs:"none",md:"block"}}} width={120} height={40} />
+  //      <Skeleton variant="circular" width={35} height={35} />
+  //    </div>
+  //  );
     
   // this is for the menu-component
   const open = Boolean(anchorEl);
@@ -40,9 +37,10 @@ const NavAuthState = () => {
     <>
       <div className="flex items-center sm:ps-3">
         <Typography color="white" className="hidden sm:block">
-          {session ? session!.user?.name : "name"}
+                  {/*{session ? session!.user?.name : "name"}*/}
+          Ashakn
         </Typography>
-        <Link href="/">
+        <Link to="/">
           <IconButton onClick={handleClick} size="large">
             <SettingsSuggestOutlinedIcon
               fontSize="inherit"
@@ -56,12 +54,12 @@ const NavAuthState = () => {
           open={open}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleClose}>{session?.user?.email}</MenuItem>
-          <MenuItem onClick={handleClose}>{session?.user?.name}</MenuItem>
+          {/*<MenuItem onClick={handleClose}>{session?.user?.email}</MenuItem>*/}
+          {/*<MenuItem onClick={handleClose}>{session?.user?.name}</MenuItem>*/}
         </Menu>
       </div>
       <Divider orientation="vertical" flexItem />
-      <Link href="/api/auth/signout">
+      <Link to="/Register">
         <IconButton size="large">
           <PowerSettingsNewRoundedIcon
             fontSize="inherit"

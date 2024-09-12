@@ -1,10 +1,12 @@
 ﻿using AspTechTrader.Core.Domain.Entities;
+using AspTechTrader.Core.Domain.IdentityEntities;
 using AspTechTrader.Core.Enums;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace AspTechTrader.Infrastructure.AppDbContext
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -14,20 +16,14 @@ namespace AspTechTrader.Infrastructure.AppDbContext
         //define dbSets
         public virtual DbSet<Symbol> Symbols { get; set; }
         public virtual DbSet<User> Users { get; set; }
-
         public virtual DbSet<UserSymbolProperty> UserSymbolProperties { get; set; }
-
         public virtual DbSet<UserWatchList> UserWatchLists { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            //Fluent Api //relation => optional one to many relation
-            //modelBuilder.Entity<User>()
-            //    .HasMany(e => e.Symbols)
-            //    .WithMany(e => e.Users)
-            //    .UsingEntity<UserSymbol>();
+
 
             modelBuilder.Entity<User>().ToTable("User");
             modelBuilder.Entity<Symbol>().ToTable("Symbol");
@@ -44,17 +40,7 @@ namespace AspTechTrader.Infrastructure.AppDbContext
                 .WithMany(e => e.UserWatchList);
 
 
-            //modelBuilder.Entity<User>()
-            //    .HasMany(e => e.UserSymbolProperties)
-            //    .WithOne(e => e.User)
-            //    .HasForeignKey(e => e.UserId)
-            //    .IsRequired(false);
 
-            //modelBuilder.Entity<Symbol>()
-            //    .HasMany(e => e.UserSymbolProperties)
-            //    .WithOne(e => e.Symbol)
-            //    .HasForeignKey(e => e.SymbolId)
-            //    .IsRequired(false);
 
             // seed users data
             List<User> users = new List<User>()

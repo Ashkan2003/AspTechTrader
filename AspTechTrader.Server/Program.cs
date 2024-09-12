@@ -1,10 +1,15 @@
 
+using AspTechTrader.Core.Domain.IdentityEntities;
 using AspTechTrader.Core.Domain.RepositoryContracts;
 using AspTechTrader.Core.ServiceContracts;
 using AspTechTrader.Core.Services;
 using AspTechTrader.Infrastructure.AppDbContext;
 using AspTechTrader.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 using System.Text.Json.Serialization;
 
 namespace AspTechTrader.Api
@@ -40,7 +45,17 @@ namespace AspTechTrader.Api
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                // add configuration to set authentication to swaggeer
+                //options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                //{
+                //    In = ParameterLocation.Header,
+                //    Name = "Authorization",
+                //    Type = SecuritySchemeType.ApiKey
+                //});
+                //options.OperationFilter<SecurityRequirementsOperationFilter>();
+            });
 
             //Cors // enable cors-policy
             builder.Services.AddCors(options =>
@@ -55,15 +70,30 @@ namespace AspTechTrader.Api
                 });
             });
 
-            // i added this code to fix the cycle error when using include method in EFCore
-            //builder.Services.AddControllers().AddJsonOptions(x =>
-            //    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+            //
+            builder.Services.AddAuthorization();
+            //builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
+            //    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            //Identity
+            builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+            {
+                options.Password.RequiredLength = 5;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = true;
+
+            })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders()
+                .AddUserStore<UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid>>()
+                .AddRoleStore<RoleStore<ApplicationRole, ApplicationDbContext, Guid>>();
 
 
             var app = builder.Build();
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -72,12 +102,18 @@ namespace AspTechTrader.Api
                 app.UseSwaggerUI();
             }
 
+
+            // add identity Apis
+            //app.MapIdentityApi<ApplicationUser>();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
             //enable cors
             app.UseCors();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

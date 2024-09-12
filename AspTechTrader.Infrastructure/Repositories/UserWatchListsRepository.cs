@@ -34,6 +34,7 @@ namespace AspTechTrader.Infrastructure.Repositories
             return matchedUserWatchList;
         }
 
+
         public async Task<User> AddNewUserWatchList(UserWatchListAddRequestDTO userWatchListAddRequest)
         {
             User? matchedUser = await GetUserWithRelatedUserWatchListById(userWatchListAddRequest.UserId);
@@ -78,6 +79,7 @@ namespace AspTechTrader.Infrastructure.Repositories
 
             return isDeleted;
         }
+
 
         public async Task<UserWatchList?> AddNewSymbolToUserWatchList(AddSymbolToUserWatchListRequestDTO addSymbolToUserWatchListRequestDTO)
         {
