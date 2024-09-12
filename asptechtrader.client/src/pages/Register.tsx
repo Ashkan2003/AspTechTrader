@@ -1,6 +1,11 @@
-﻿import { zodResolver } from "@hookform/resolvers/zod";
+﻿import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import Copyright from "../ui/Copyright";
+import SignLogo from "../ui/SignLogo";
+
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
-    Box,
     Grid,
     TextField,
     FormControlLabel,
@@ -8,32 +13,26 @@ import {
     Button,
     Typography,
     CircularProgress,
-    Container,
-    CssBaseline,
 } from "@mui/material";
 import axios from "axios";
-import  { useState } from "react";
-import {  SubmitHandler, useForm } from "react-hook-form";
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import toast from "react-hot-toast";
-import Copyright from "../ui/Copyright";
-import SignLogo from "../ui/SignLogo";
-import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-
 interface FormData {
-    personName: string;
-    phoneNumber: string;
+    name: string;
+    lastName: string;
     email: string;
     password: string;
 }
 
 const schema = z.object({
-    perosnName: z.string().min(3, { message: "حداقل کاراکتر برای نام رعایت نشده." }),
-    phoneNumber: z
+    name: z.string().min(3, { message: "حداقل کاراکتر برای نام رعایت نشده." }),
+    lastName: z
         .string()
-        .min(5, { message: "حداقل کاراکتر برای نام شماره تلفن رعایت نشده" }),
+        .min(3, { message: "حداقل کاراکتر برای نام خانوادگی رعایت نشده" }),
     email: z.string().email({ message: "فرمت ایمیل باید درست باشد." }),
     password: z
         .string()
@@ -41,6 +40,7 @@ const schema = z.object({
 });
 
 function Register() {
+
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -61,16 +61,18 @@ function Register() {
                 method: "post",
                 url: "https://localhost:7007/api/Account/Register",
                 data: {
-                    personName: data.personName,
+                    personName: data.name,
                     email: data.email,
                     password: data.password,
-                    phoneNumber: data.phoneNumber,
+                    phoneNumber: "9243243423",
                 },
             });
             // if success return this
             if (res.status == 200) {
                 // redirect the user to the dashboard
                 navigate("/")
+                console.log(res,"fff")
+                localStorage.setItem("token",res.data.token)
                 toast.success("ثبت نام با موفقیت انجام شد.");
             }
         } catch (error: any) {
@@ -107,10 +109,10 @@ function Register() {
                               id="firstName"
                               label="نام"
                               autoFocus
-                              {...register("personName")}
+                              {...register("name")}
                           />
-                          {errors.personName?.message && (
-                              <Typography color="red">{errors.personName?.message}</Typography>
+                          {errors.name?.message && (
+                              <Typography color="red">{errors.name?.message}</Typography>
                           )}
                       </Grid>
                       <Grid item xs={12} sm={6}>
@@ -118,13 +120,13 @@ function Register() {
                               color="info"
                               required
                               fullWidth
-                              id="phoneNumber"
-                              label="شماره تلفن"
-                              autoComplete="phone-number"
-                              {...register("phoneNumber")}
+                              id="lastName"
+                              label="نام خانوادگی"
+                              autoComplete="family-name"
+                              {...register("lastName")}
                           />
-                          {errors.phoneNumber?.message && (
-                              <Typography color="red">{errors.phoneNumber?.message}</Typography>
+                          {errors.lastName?.message && (
+                              <Typography color="red">{errors.lastName?.message}</Typography>
                           )}
                       </Grid>
                       <Grid item xs={12}>
@@ -174,10 +176,11 @@ function Register() {
                       {loading ? <CircularProgress size={25} color="info" /> : "ثبت نام"}
                   </Button>
                   <Grid container justifyContent="flex-end">
-                      <Grid item>
-                          {/*<Navigate to="/login"/>*/}
-                              حساب کاربری دارید؟ ورود
-                      </Grid>
+                      {/*<Grid item>*/}
+                      {/*    <Link href="/signin" className="text-blue-600">*/}
+                      {/*        حساب کاربری دارید؟ ورود*/}
+                      {/*    </Link>*/}
+                      {/*</Grid>*/}
                   </Grid>
               </Box>
           </Box>
@@ -187,3 +190,52 @@ function Register() {
 }
 
 export default Register;
+
+
+
+
+
+
+
+
+
+
+
+//const [loading, setLoading] = useState(false);
+//const navigate = useNavigate();
+
+//// the resolver is a convectore thats convert the zod-schema to the useForm
+//const {
+//    register,
+//    handleSubmit,
+//    formState: { errors },
+//} = useForm<FormData>({ resolver: zodResolver(schema) });
+
+//// when the user click on the submit-btn then send these information to the db
+//const onSubmit: SubmitHandler<FormData> = async (data) => {
+//    setLoading(true);
+//    console.log(data, 'the data')
+
+//    try {
+//        const res = await axios({
+//            method: "post",
+//            url: "https://localhost:7007/api/Account/Register",
+//            data: {
+//                personName: data.personName,
+//                email: data.email,
+//                password: data.password,
+//                phoneNumber: data.phoneNumber,
+//            },
+//        });
+//        // if success return this
+//        if (res.status == 200) {
+//            // redirect the user to the dashboard
+//            navigate("/")
+//            toast.success("ثبت نام با موفقیت انجام شد.");
+//        }
+//    } catch (error: any) {
+//        console.log(error, "errors")
+//        setLoading(false);
+//        toast.error("ثبت نام ناموفق بود.");
+//    }
+//};

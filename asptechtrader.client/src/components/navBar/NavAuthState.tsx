@@ -40,14 +40,12 @@ const NavAuthState = () => {
                   {/*{session ? session!.user?.name : "name"}*/}
           Ashakn
         </Typography>
-        <Link to="/">
           <IconButton onClick={handleClick} size="large">
             <SettingsSuggestOutlinedIcon
               fontSize="inherit"
               color="secondary"
             ></SettingsSuggestOutlinedIcon>
           </IconButton>
-        </Link>
         <Menu
           id="basic-menu"
           anchorEl={anchorEl}

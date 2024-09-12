@@ -32,6 +32,8 @@ namespace AspTechTrader.Api
             builder.Services.AddScoped<IUserService, UsersService>();
             builder.Services.AddScoped<IUserSymbolPropertyService, UserSymbolPropertyService>();
             builder.Services.AddScoped<IUserWatchListsService, UserWatchListsService>();
+            builder.Services.AddTransient<IJwtService, JwtService>();
+            
             builder.Services.AddScoped<ISymbolsRepository, SymbolsRepository>();
             builder.Services.AddScoped<IUsersRepository, UsersRepository>();
             builder.Services.AddScoped<IUserSymbolPropertyRepository, UserSymbolPropertyRepository>();

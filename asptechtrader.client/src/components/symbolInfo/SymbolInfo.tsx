@@ -129,21 +129,21 @@ export default function SymbolInfo() {
           />
         </Tabs>
       </Box>
-      <CustomTabPanel value={value} index={0}>
-        <SupplyDemandTab currentSymbol={currentSymbol!} />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        <SymbolInfoBox currentSymbol={currentSymbol!} />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        {/*<SymbolChart data={currentSymbol!.chartNumber!} />*/}
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={3}>
-        <SymbolPieChart
-          offerVolume={currentSymbol?.offerVolume!}
-          demandVolume={currentSymbol?.demandVolume!}
-        />
-      </CustomTabPanel>
+      {/*<CustomTabPanel value={value} index={0}>*/}
+      {/*  <SupplyDemandTab currentSymbol={currentSymbol!} />*/}
+      {/*</CustomTabPanel>*/}
+      {/*<CustomTabPanel value={value} index={1}>*/}
+      {/*  <SymbolInfoBox currentSymbol={currentSymbol!} />*/}
+      {/*</CustomTabPanel>*/}
+      {/*<CustomTabPanel value={value} index={2}>*/}
+      {/*  */}{/*<SymbolChart data={currentSymbol!.chartNumber!} />*/}
+      {/*</CustomTabPanel>*/}
+      {/*<CustomTabPanel value={value} index={3}>*/}
+      {/*  <SymbolPieChart*/}
+      {/*    offerVolume={currentSymbol?.offerVolume!}*/}
+      {/*    demandVolume={currentSymbol?.demandVolume!}*/}
+        {/*/>*/}
+      {/*</CustomTabPanel>*/}
     </Box>
   );
 }
