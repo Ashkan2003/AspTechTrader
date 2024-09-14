@@ -1,4 +1,3 @@
-
 using AspTechTrader.Core.Domain.IdentityEntities;
 using AspTechTrader.Core.Domain.RepositoryContracts;
 using AspTechTrader.Core.ServiceContracts;
@@ -80,7 +79,7 @@ namespace AspTechTrader.Api
                 options.Password.RequiredLength = 5;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireDigit = true;
-
+                options.Password.RequireUppercase = false;
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders()
@@ -98,24 +97,20 @@ namespace AspTechTrader.Api
                 // when the user make a http-request with jwt-token in header , with this code we validate and give the permishion to get the data or post the data
                 .AddJwtBearer(options =>
                 {
-                    //options.UseSecurityTokenValidators = true;
-                    //options.RequireHttpsMetadata = false;
-                    //options.SaveToken = true;
                     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
                     {
                         LogValidationExceptions = true,
 
                         // validate issuer
                         ValidateIssuer = true,
-                        // validate Audiance
-                        ValidateAudience = true,
-                        // validate exprationDate
-                        ValidateLifetime = true,
-
-                        ValidAudience = builder.Configuration["Jwt:Audience"],
-
                         ValidIssuer = builder.Configuration["Jwt:Issuer"],
 
+                        // validate Audiance
+                        ValidateAudience = true,
+                        ValidAudience = builder.Configuration["Jwt:Audience"],
+
+                        // validate exprationDate
+                        ValidateLifetime = true,
 
                         // validate signature
                         ValidateIssuerSigningKey = true,
