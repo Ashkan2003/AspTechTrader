@@ -29,8 +29,9 @@ namespace AspTechTrader.Core.Services
         public AuthenticationResponseDTO CreateJwtToken(ApplicationUser applicationUser)
         {
             // get the expiration-minote like (10minite) and convert it to dateTime in futer // eg = 2024/3/1 + 10minote = the expration-date
-            DateTime expiration = DateTime.UtcNow.AddMinutes(
-                Convert.ToDouble(_configuration["Jwt:expiration_minutes"]));
+            //DateTime expiration = DateTime.UtcNow.AddMinutes(
+            //    Convert.ToDouble(_configuration["Jwt:expiration_minutes"]));
+            DateTime expiration = DateTime.Now.AddMinutes(60);
 
             // the jwt-peyload
             // Create an array of Claim objects representing the user's claims, such as their ID, name, email, etc.
@@ -39,15 +40,14 @@ namespace AspTechTrader.Core.Services
 
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()), // Jwt unique ID
                 
-                new Claim(JwtRegisteredClaimNames.Iat,DateTime.UtcNow.ToString()), // Issued at (date and time of the token generation
+                //new Claim(JwtRegisteredClaimNames.Iat,DateTime.UtcNow.ToString()), // Issued at (date and time of the token generation
 
-                new Claim(JwtRegisteredClaimNames.Sub,applicationUser.Id.ToString()), // Subject (user id)
 
-                // optional
-                new Claim(ClaimTypes.NameIdentifier,applicationUser.Email), // uniqu name identifire of user (Email)
+                ////// optional
+                //new Claim(ClaimTypes.NameIdentifier,applicationUser.Email), // uniqu name identifire of user (Email)
 
-                // optional
-                new Claim(ClaimTypes.NameIdentifier,applicationUser.PersonName), // uniqu name identifire of user (PersonNAme)
+                ////// optional
+                //new Claim(ClaimTypes.NameIdentifier,applicationUser.PersonName), // uniqu name identifire of user (PersonNAme)
        
             };
 

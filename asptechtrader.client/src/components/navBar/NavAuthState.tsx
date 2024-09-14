@@ -57,7 +57,7 @@ const NavAuthState = () => {
         </Menu>
       </div>
       <Divider orientation="vertical" flexItem />
-      <Link to="/Register">
+      <Link to="/LogOut">
         <IconButton size="large">
           <PowerSettingsNewRoundedIcon
             fontSize="inherit"

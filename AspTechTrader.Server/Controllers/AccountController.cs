@@ -58,7 +58,8 @@ namespace AspTechTrader.Api.Controllers
             {
                 //sign in
                 await _signInManager.SignInAsync(user, isPersistent: false);
-
+                
+                // create a new jwt-token fo the registered user
                 AuthenticationResponseDTO authenticationRespose = _jwtService.CreateJwtToken(user);
 
                 return Ok(authenticationRespose);
@@ -107,6 +108,7 @@ namespace AspTechTrader.Api.Controllers
                 //sign in
                 await _signInManager.SignInAsync(user, isPersistent: false);
 
+                // create a new jwt-token fo the logedd in user
                 AuthenticationResponseDTO authenticationRespose = _jwtService.CreateJwtToken(user);
 
                 return Ok(authenticationRespose);

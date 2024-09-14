@@ -5,11 +5,12 @@ using AspTechTrader.Core.ServiceContracts;
 using AspTechTrader.Core.Services;
 using AspTechTrader.Infrastructure.AppDbContext;
 using AspTechTrader.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Filters;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace AspTechTrader.Api
@@ -32,12 +33,11 @@ namespace AspTechTrader.Api
             builder.Services.AddScoped<IUserService, UsersService>();
             builder.Services.AddScoped<IUserSymbolPropertyService, UserSymbolPropertyService>();
             builder.Services.AddScoped<IUserWatchListsService, UserWatchListsService>();
-            builder.Services.AddTransient<IJwtService, JwtService>();
-            
             builder.Services.AddScoped<ISymbolsRepository, SymbolsRepository>();
             builder.Services.AddScoped<IUsersRepository, UsersRepository>();
             builder.Services.AddScoped<IUserSymbolPropertyRepository, UserSymbolPropertyRepository>();
             builder.Services.AddScoped<IUserWatchListsRepository, UserWatchListsRepository>();
+            builder.Services.AddScoped<IJwtService, JwtService>();
 
             builder.Services.AddControllers().AddJsonOptions(options =>
             {
@@ -72,10 +72,7 @@ namespace AspTechTrader.Api
                 });
             });
 
-            //
-            builder.Services.AddAuthorization();
-            //builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
-            //    .AddEntityFrameworkStores<ApplicationDbContext>();
+
 
             //Identity
             builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
@@ -90,6 +87,44 @@ namespace AspTechTrader.Api
                 .AddUserStore<UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid>>()
                 .AddRoleStore<RoleStore<ApplicationRole, ApplicationDbContext, Guid>>();
 
+            //Jwt 
+            // we can authenticate users by jwt or cookie-authentication
+            builder.Services.AddAuthentication(options =>
+            {
+                // set the default authentication-schema to jwt
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                // when the user make a http-request with jwt-token in header , with this code we validate and give the permishion to get the data or post the data
+                .AddJwtBearer(options =>
+                {
+                    //options.UseSecurityTokenValidators = true;
+                    //options.RequireHttpsMetadata = false;
+                    //options.SaveToken = true;
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                    {
+                        LogValidationExceptions = true,
+
+                        // validate issuer
+                        ValidateIssuer = true,
+                        // validate Audiance
+                        ValidateAudience = true,
+                        // validate exprationDate
+                        ValidateLifetime = true,
+
+                        ValidAudience = builder.Configuration["Jwt:Audience"],
+
+                        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+
+
+                        // validate signature
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                    };
+                });
+
+            //
+            builder.Services.AddAuthorization();
 
             var app = builder.Build();
 
@@ -104,9 +139,6 @@ namespace AspTechTrader.Api
                 app.UseSwaggerUI();
             }
 
-
-            // add identity Apis
-            //app.MapIdentityApi<ApplicationUser>();
 
             app.UseHttpsRedirection();
 

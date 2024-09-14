@@ -22,7 +22,7 @@ namespace AspTechTrader.Api.Controllers
         }
 
 
-
+        [Authorize]
         [HttpGet("getSymbols")] // https://localhost:7007/api/Symbols/getSymbols
         public async Task<ActionResult<List<Symbol>>> GetAllSymbols()
         {

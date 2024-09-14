@@ -19,7 +19,7 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface FormData {
     name: string;
@@ -54,7 +54,6 @@ function Register() {
     // when the user click on the submit-btn then send these information to the db
     const onSubmit: SubmitHandler<FormData> = async (data) => {
         setLoading(true);
-        console.log(data, 'the data')
 
         try {
             const res = await axios({
@@ -71,8 +70,10 @@ function Register() {
             if (res.status == 200) {
                 // redirect the user to the dashboard
                 navigate("/")
-                console.log(res,"fff")
-                localStorage.setItem("token",res.data.token)
+
+                // store the newly generated jwt-token in localStorage
+                localStorage.setItem("token", res.data.token)
+
                 toast.success("ثبت نام با موفقیت انجام شد.");
             }
         } catch (error: any) {
@@ -176,11 +177,11 @@ function Register() {
                       {loading ? <CircularProgress size={25} color="info" /> : "ثبت نام"}
                   </Button>
                   <Grid container justifyContent="flex-end">
-                      {/*<Grid item>*/}
-                      {/*    <Link href="/signin" className="text-blue-600">*/}
-                      {/*        حساب کاربری دارید؟ ورود*/}
-                      {/*    </Link>*/}
-                      {/*</Grid>*/}
+                      <Grid item>
+                          <Link to="/Login" className="text-blue-600">
+                              حساب کاربری دارید؟ ورود
+                          </Link>
+                      </Grid>
                   </Grid>
               </Box>
           </Box>
