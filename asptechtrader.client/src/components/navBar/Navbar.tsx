@@ -8,7 +8,35 @@ import Menu from "./Menu";
 import NavClock from "./NavClock";
 import UserProperty from "./UserProperty";
 import NavAuthState from "./NavAuthState";
+import axios from "axios";
 export default function Navbar() {
+
+    async function handleClick() {
+        console.log("refresh")
+        const token = localStorage.getItem("token")
+        const refreshToken = localStorage.getItem("refreshToken")
+
+        const res = await axios({
+            method: "post",
+            url: "https://localhost:7007/api/Account/GenerateNewToken",
+            data: {
+                token: token,
+                refreshToken: refreshToken,
+            },
+        });
+
+        if (res.status == 200) {
+            console.log("succssess refresh")
+            localStorage.setItem("token", res.data.token)
+            localStorage.setItem("refreshToken", res.data.refreshToken)
+
+        }
+        else {
+            console.log("errorr refresh")
+        }
+    }
+
+
   return (
     <header className="bg-[#5D6E88] dark:bg-[#2D3E4A]  h-13">
       <nav className="flex  items-center justify-between  ">
@@ -55,8 +83,8 @@ export default function Navbar() {
             <IconButton size="large">
               <HelpOutlineTwoToneIcon fontSize="inherit" color="secondary" />
             </IconButton>
-            <Divider orientation="vertical" flexItem />
-            <IconButton size="large">
+                      <Divider orientation="vertical" flexItem />
+                      <IconButton onClick={handleClick} size="large">
               <GridViewOutlinedIcon fontSize="inherit" color="secondary" />
             </IconButton>
           </Box>

@@ -65,6 +65,8 @@ function Login() {
 
                 // store the newly generated jwt-token in localStorage
                 localStorage.setItem("token", res.data.token)
+                // store the refreshToken
+                localStorage.setItem("refreshToken", res.data.refreshToken)
 
                 toast.success("ورود با موفقیت انجام شد.");
             }

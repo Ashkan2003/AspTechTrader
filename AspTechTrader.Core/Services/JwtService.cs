@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace AspTechTrader.Core.Services
@@ -39,6 +40,7 @@ namespace AspTechTrader.Core.Services
 
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()), // Jwt unique ID
                 
+                new Claim(ClaimTypes.Email,applicationUser.Email),
                 // this code created a bug //motherFucker
                 //new Claim(JwtRegisteredClaimNames.Iat,DateTime.UtcNow.ToString()), // Issued at (date and time of the token generation
 
@@ -83,9 +85,66 @@ namespace AspTechTrader.Core.Services
                 Expiration = expiration,
                 Email = applicationUser.Email,
                 PersonName = applicationUser.PersonName,
+                RefreshToken = GenerateRefreshToken(),
+                RefreshTokenExpirationDateTime = DateTime.Now.AddMinutes(Convert.ToInt32(_configuration["RefreshToken:expiration_minutes"]))
             };
 
 
         }
+
+
+        // create base-64 random refreshToken
+        private string GenerateRefreshToken()
+        {
+            Byte[] bytes = new Byte[64];
+            var randomNumberGenerator = RandomNumberGenerator.Create();
+
+            randomNumberGenerator.GetBytes(bytes);
+            return Convert.ToBase64String(bytes);
+
+        }
+        public ClaimsPrincipal? GetPrincipalFormJwtToken(string? token)
+        {
+            var tokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+            {
+                LogValidationExceptions = true,
+
+                // validate issuer
+                ValidateIssuer = true,
+                ValidIssuer = _configuration["Jwt:Issuer"],
+
+                // validate Audiance
+                ValidateAudience = true,
+                ValidAudience = _configuration["Jwt:Audience"],
+
+                //becuz the token is expired when we exicud this method so dont validate exprationDate
+                ValidateLifetime = false,
+
+                // validate signature
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]))
+            };
+
+
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            ClaimsPrincipal principal = tokenHandler.ValidateToken(
+                token,
+                tokenValidationParameters,
+                out SecurityToken securityToken
+                );
+
+            // validation of token
+            if (
+                securityToken is not JwtSecurityToken jwtSecurityToken ||
+                !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase)
+                )
+            {
+                throw new SecurityTokenException("Invalid token");
+            }
+
+            return principal;
+        }
+
+
     }
 }

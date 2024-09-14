@@ -4,6 +4,7 @@ using AspTechTrader.Core.ServiceContracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AspTechTrader.Api.Controllers
 {
@@ -58,9 +59,14 @@ namespace AspTechTrader.Api.Controllers
             {
                 //sign in
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                
+
                 // create a new jwt-token fo the registered user
                 AuthenticationResponseDTO authenticationRespose = _jwtService.CreateJwtToken(user);
+
+                // save the newly genereted-refresh-token in the asp-user-db
+                user.RefreshToken = authenticationRespose.RefreshToken;
+                user.RefreshTokenExpirationDateTime = authenticationRespose.RefreshTokenExpirationDateTime;
+                await _userManager.UpdateAsync(user);
 
                 return Ok(authenticationRespose);
             }
@@ -111,6 +117,12 @@ namespace AspTechTrader.Api.Controllers
                 // create a new jwt-token fo the logedd in user
                 AuthenticationResponseDTO authenticationRespose = _jwtService.CreateJwtToken(user);
 
+                // save the newly genereted-refresh-token in the asp-user-db
+                user.RefreshToken = authenticationRespose.RefreshToken;
+                user.RefreshTokenExpirationDateTime = authenticationRespose.RefreshTokenExpirationDateTime;
+                await _userManager.UpdateAsync(user);
+
+
                 return Ok(authenticationRespose);
 
             }
@@ -128,5 +140,46 @@ namespace AspTechTrader.Api.Controllers
             await _signInManager.SignOutAsync();
             return NoContent();
         }
+
+        [HttpPost("GenerateNewToken")]
+        public async Task<IActionResult> GenerateNewAccessToken(GenerateNewJwtTokenRequestDTO generateNewJwtTokenRequestDTO)
+        {
+            if (generateNewJwtTokenRequestDTO == null)
+            {
+                return BadRequest("Invalid client request");
+
+            }
+
+            ClaimsPrincipal? principal = _jwtService.GetPrincipalFormJwtToken(generateNewJwtTokenRequestDTO.Token);
+
+            if (principal == null)
+            {
+                return BadRequest("Invalid jwt-access-token");
+            }
+
+            string? email = principal.FindFirstValue(ClaimTypes.Email);
+
+            ApplicationUser? user = await _userManager.FindByEmailAsync(email);
+
+            if (
+                user == null ||
+                user.RefreshToken != generateNewJwtTokenRequestDTO.refreshToken ||
+                user.RefreshTokenExpirationDateTime <= DateTime.Now
+                )
+            {
+                return BadRequest("invalid refreshToken");
+            }
+
+            AuthenticationResponseDTO authenticationResponseDTO = _jwtService.CreateJwtToken(user);
+
+            user.RefreshToken = authenticationResponseDTO.RefreshToken;
+            user.RefreshTokenExpirationDateTime = authenticationResponseDTO.RefreshTokenExpirationDateTime;
+
+            await _userManager.UpdateAsync(user);
+
+            return Ok(authenticationResponseDTO);
+
+        }
+
     }
 }
