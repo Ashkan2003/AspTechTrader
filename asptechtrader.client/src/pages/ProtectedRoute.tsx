@@ -1,50 +1,28 @@
-﻿import { CircularProgress } from "@mui/material";
-import axios from "axios";
-import  { useEffect, useState } from "react";
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+import { CircularProgress } from "@mui/material";
+import  { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import { useGetCurrentUser } from "../features/reactQueryUser/useGetCurrentUser";
 
-
+// this is a tsx file with logic of Authenticating user when first entered the app
+// its like a middelware
 function ProtectedRoute() {
-    const [isloading, setLoading] = useState(false);
-    const [currentUser, setCurrentUser] = useState(null)
     const navigate = useNavigate();
-
-    const token = localStorage.getItem("token")
-
-    if (!token) {
-        navigate("/Login")
-    }
+    const { currentUser, isLoadingUser, isSuccess,error } = useGetCurrentUser()
+    
 
     useEffect(() => {
-        async function handleGetCurrentUser() {
-            try {
-                setLoading(true);
-                const res = await axios({
-                    method: "get",
-                    url: `https://localhost:7007/api/Account/GetCurrentLoggedInUser?Token=${token}`,
-
-                });
-
-                if (res.status == 200) {
-                    console.log(res)
-                    setCurrentUser(res.data)
-                    setLoading(false);
-                }
-            } catch (error: any) {
-                console.log(error);
-                setLoading(false);
-            }
+        if (currentUser == null && !isLoadingUser) {
+            navigate("/Login")
         }
-        handleGetCurrentUser()
+    }, [currentUser, isLoadingUser, navigate])
 
-    }, [token])
-
-    if (isloading) {
-        return <CircularProgress color="info" />
-    }
-
-    if (currentUser == null && !isloading) {
-        navigate("/Login")
+    if (isLoadingUser) {
+        return (
+            <div className="bg-gray-600 h-[100vh] flex items-center justify-center">
+                <CircularProgress color="info" size={50} />
+            </div>
+        )
     }
 
     if (currentUser) {
