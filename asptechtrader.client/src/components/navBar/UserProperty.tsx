@@ -1,17 +1,18 @@
 import { Skeleton, Typography } from "@mui/material";
-import { useUserTradeAccount } from "../../features/reactQueryTradeAccount/useUserTradeAccount";
+import { useGetCurrentUser } from "../../features/reactQueryUser/useGetCurrentUser";
 
 const UserProperty = () => {
 
-    const { userTradeAccount, isLoadingTradeAccount } = useUserTradeAccount();
+    const { currentUser, isLoadingUser, error } = useGetCurrentUser()
+
   return (
     <div className=" px-4 hidden md:flex items-center">
       <Typography className="text-white">مانده قابل معامله:</Typography>
-      {isLoadingTradeAccount ? (
+      {isLoadingUser ? (
         <Skeleton sx={{marginLeft:"10px"}} width="80px" height="50px" />
       ) : (
         <Typography className="text-yellow-300 ps-1">
-          {userTradeAccount?.userProperty} ریال
+                      {currentUser?.userProperty} ریال
         </Typography>
       )}
     </div>

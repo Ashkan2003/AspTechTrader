@@ -2,28 +2,31 @@ import {
   Typography,
   IconButton,
   Divider,
-  //Skeleton,
+  Skeleton,
   Menu,
-  //MenuItem,
+  MenuItem,
 } from "@mui/material";
 import SettingsSuggestOutlinedIcon from "@mui/icons-material/SettingsSuggestOutlined";
 import PowerSettingsNewRoundedIcon from "@mui/icons-material/PowerSettingsNewRounded";
 import { useState } from "react";
 import { Link } from 'react-router-dom';
-// this component is for rendering the Auth-state of the user in the navbar such as login, signup, logout and user-avatar
-const NavAuthState = () => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // this is for the menu-component
-  //const { status, data: session } = useSession(); // the useSession hook is for geting user  authstatus in the client
+import { useGetCurrentUser } from "../../features/reactQueryUser/useGetCurrentUser";
 
-  // console.log(session,"ggg")
-  //if (status == "loading")
-  //  return (
-  //    <div className="flex items-center ps-3">
-  //      <Skeleton variant="rounded" sx={{display:{xs:"none",md:"block"}}} width={120} height={40} />
-  //      <Skeleton variant="circular" width={35} height={35} />
-  //    </div>
-  //  );
-    
+
+const NavAuthState = () => {
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // this is for the menu-component
+    const { currentUser, isLoadingUser, error } = useGetCurrentUser()
+
+   if (isLoadingUser)
+    return (
+      <div className="flex items-center ps-3">
+        <Skeleton variant="rounded" sx={{display:{xs:"none",md:"block"}}} width={120} height={40} />
+        <Skeleton variant="circular" width={35} height={35} />
+      </div>
+    );
+
+    console.log(currentUser,"sa")
+
   // this is for the menu-component
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -37,8 +40,7 @@ const NavAuthState = () => {
     <>
       <div className="flex items-center sm:ps-3">
         <Typography color="white" className="hidden sm:block">
-                  {/*{session ? session!.user?.name : "name"}*/}
-          Ashakn
+                  {currentUser.userName}   
         </Typography>
           <IconButton onClick={handleClick} size="large">
             <SettingsSuggestOutlinedIcon
@@ -51,9 +53,9 @@ const NavAuthState = () => {
           anchorEl={anchorEl}
           open={open}
           onClose={handleClose}
-        >
-          {/*<MenuItem onClick={handleClose}>{session?.user?.email}</MenuItem>*/}
-          {/*<MenuItem onClick={handleClose}>{session?.user?.name}</MenuItem>*/}
+              >
+      <MenuItem onClick={handleClose}>{currentUser.emailAddress}</MenuItem>
+      <MenuItem onClick={handleClose}>{currentUser.userName}</MenuItem>
         </Menu>
       </div>
       <Divider orientation="vertical" flexItem />

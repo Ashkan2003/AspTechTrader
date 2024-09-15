@@ -1,4 +1,5 @@
-﻿using AspTechTrader.Core.Domain.IdentityEntities;
+﻿using AspTechTrader.Core.Domain.Entities;
+using AspTechTrader.Core.Domain.IdentityEntities;
 using AspTechTrader.Core.DTO;
 using AspTechTrader.Core.ServiceContracts;
 using Microsoft.AspNetCore.Authorization;
@@ -17,17 +18,22 @@ namespace AspTechTrader.Api.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IJwtService _jwtService;
+        private readonly IUserService _userService;
+
+
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             RoleManager<ApplicationRole> roleManager,
-            IJwtService jwtService
+            IJwtService jwtService,
+            IUserService userService
             )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _jwtService = jwtService;
+            _userService = userService;
         }
 
         [HttpPost("Register")]
@@ -67,6 +73,14 @@ namespace AspTechTrader.Api.Controllers
                 user.RefreshToken = authenticationRespose.RefreshToken;
                 user.RefreshTokenExpirationDateTime = authenticationRespose.RefreshTokenExpirationDateTime;
                 await _userManager.UpdateAsync(user);
+
+                // create user // this is the main user of application and important
+                // this user is diffrent from identity-user
+                await _userService.AddUser(new UserAddRequestDTO()
+                {
+                    UserName = registerDTO.PersonName,
+                    EmailAddress = registerDTO.Email,
+                });
 
                 return Ok(authenticationRespose);
             }
@@ -182,6 +196,7 @@ namespace AspTechTrader.Api.Controllers
 
 
         // we want to get the current loggendIn user by the token that is stored in his local storage
+        // the use we returned is the trade-account-user
         [HttpGet("GetCurrentLoggedInUser")]
         public async Task<IActionResult> GetUser(string Token)
         {
@@ -205,8 +220,9 @@ namespace AspTechTrader.Api.Controllers
                 return NotFound("no email founded in the given jwt-token with email-claim");
             }
 
-            ApplicationUser? user = await _userManager.FindByEmailAsync(email);
+            //ApplicationUser? user = await _userManager.FindByEmailAsync(email);
 
+            User? user = await _userService.GetUserByEmail(email);
 
             if (user == null)
             {
