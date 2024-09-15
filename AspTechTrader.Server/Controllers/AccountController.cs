@@ -133,7 +133,6 @@ namespace AspTechTrader.Api.Controllers
 
         }
 
-
         [HttpGet("LogOut")]
         public async Task<ActionResult> GetLogOut()
         {
@@ -181,5 +180,40 @@ namespace AspTechTrader.Api.Controllers
 
         }
 
+
+        // we want to get the current loggendIn user by the token that is stored in his local storage
+        [HttpGet("GetCurrentLoggedInUser")]
+        public async Task<IActionResult> GetUser(string Token)
+        {
+            if (string.IsNullOrEmpty(Token))
+            {
+                return BadRequest("the token is null or not supplied");
+            }
+
+            ClaimsPrincipal? principal = _jwtService.GetPrincipalFormJwtToken(Token);
+
+            if (principal == null)
+            {
+                return BadRequest("Invalid jwt-token");
+            }
+
+            //in the _jwtService.CreateJwtToken we pass the user email as a one of the claims, so we can get than email from decoding the jwt token
+            string? email = principal.FindFirstValue(ClaimTypes.Email);
+
+            if (email == null)
+            {
+                return NotFound("no email founded in the given jwt-token with email-claim");
+            }
+
+            ApplicationUser? user = await _userManager.FindByEmailAsync(email);
+
+
+            if (user == null)
+            {
+                return NotFound("no user founded with the email provided");
+            }
+
+            return Ok(user);
+        }
     }
 }

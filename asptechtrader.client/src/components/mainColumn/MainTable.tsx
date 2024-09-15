@@ -126,7 +126,6 @@ export default function MainTable() {
 
    //get the entire symbols from the db with react-query
     const { isLoading, dataBaseSybmols, error } = useSymbols();
-    console.log(dataBaseSybmols)
    
 
   // get the selected-symbols-name that are selected by user from the watchTabsList

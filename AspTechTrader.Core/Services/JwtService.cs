@@ -41,6 +41,7 @@ namespace AspTechTrader.Core.Services
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()), // Jwt unique ID
                 
                 new Claim(ClaimTypes.Email,applicationUser.Email),
+
                 // this code created a bug //motherFucker
                 //new Claim(JwtRegisteredClaimNames.Iat,DateTime.UtcNow.ToString()), // Issued at (date and time of the token generation
 
@@ -103,6 +104,8 @@ namespace AspTechTrader.Core.Services
             return Convert.ToBase64String(bytes);
 
         }
+
+
         public ClaimsPrincipal? GetPrincipalFormJwtToken(string? token)
         {
             var tokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()

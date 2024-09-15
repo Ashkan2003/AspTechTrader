@@ -8,13 +8,17 @@ import CustomThemeProvider from './MaterialUiThemeProvider.tsx';
 import { Toaster } from 'react-hot-toast';
 import Register from './pages/Register.tsx';
 import LogOut from './pages/LogOut.tsx';
+import ProtectedRoute from './pages/ProtectedRoute.tsx';
 
 
 
     const router = createBrowserRouter([
-        {
-            path: "/",
-            element:<Home/>
+        {   
+            element: <ProtectedRoute />,
+            children: [{
+                path: "/",
+                element:<Home/>
+            }]
         },
         {
             path: "/Login",

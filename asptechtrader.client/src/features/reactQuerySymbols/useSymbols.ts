@@ -22,6 +22,5 @@ export const useSymbols = () => {
         //await axios.get("https://localhost:7007/api/Symbols/getSymbols").then((res) => res.data), // we pass a function to this to fetch the data
     
   });
-    console.log(localStorage.getItem("token"),"hhhhhh")
   return { dataBaseSybmols, isLoading, error };
 };
