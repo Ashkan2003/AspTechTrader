@@ -7,8 +7,15 @@ export const useUpdateWatchList = () => {
   const queryClient = useQueryClient();
 
   const { mutate:updateWatchListMutate } = useMutation({
-    mutationFn: (data: { id: number; title: string; symbols: string }) => {
-      return axios.patch("/api/watchLists", data);
+    mutationFn: (data: { userWatchListId: string; symbolNameList:string[] }) => {
+          return axios({
+              method: "post",
+              url: "https://localhost:7007/api/UserWatchLists/AddNewSymbolToGivenUserWatchList",
+              headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`
+              },
+              data: data
+          });
     },
     onSuccess: () => {
       toast.success("دیده بان مورد ویرایش گردید.");

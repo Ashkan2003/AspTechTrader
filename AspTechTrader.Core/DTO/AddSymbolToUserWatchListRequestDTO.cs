@@ -8,6 +8,6 @@ namespace AspTechTrader.Core.DTO
         public Guid UserWatchListId { get; set; }
 
         [Required(ErrorMessage = "SymbolId cant be blank")]
-        public Guid SymbolId { get; set; }
+        public List<string> SymbolNameList { get; set; }
     }
 }

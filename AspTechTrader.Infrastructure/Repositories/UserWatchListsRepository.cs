@@ -83,28 +83,39 @@ namespace AspTechTrader.Infrastructure.Repositories
 
         public async Task<UserWatchList?> AddNewSymbolToUserWatchList(AddSymbolToUserWatchListRequestDTO addSymbolToUserWatchListRequestDTO)
         {
+            // get matched userWatchList
             UserWatchList? matchedUserWatchList = await GetUserWatchListById(addSymbolToUserWatchListRequestDTO.UserWatchListId);
-
-            Symbol? matchedSymbol = await _db.Symbols.FirstOrDefaultAsync(temp => temp.SymbolId == addSymbolToUserWatchListRequestDTO.SymbolId);
 
             if (matchedUserWatchList == null)
             {
                 throw new ArgumentNullException("there is no related userwatchList with the given userWatchListId");
             }
 
-            if (matchedSymbol == null)
+            // initialize a new list of symbols
+            List<Symbol> symbolsToAddToUserWatchList = new List<Symbol>();
+
+            // clear all symbols from the list // that becuz user can send differend combinations of symbols and its difficalt to add or delete them in one code
+            matchedUserWatchList.Symbols.Clear();
+
+
+            //loop throgh the symbolIdList and get each symbol and add it to the symbolsToAddToUserWatchList
+            foreach (var symbolName in addSymbolToUserWatchListRequestDTO.SymbolNameList)
             {
-                throw new ArgumentNullException("there is no related symbol with the given simbolId");
+
+                Symbol? matchedSymbol = await _db.Symbols.FirstOrDefaultAsync(temp => temp.SymbolName == symbolName);
+
+                if (matchedSymbol == null)
+                {
+                    throw new ArgumentNullException("there is no related symbol with the given simbolId");
+                }
+
+                // add matched symbol to the list
+                symbolsToAddToUserWatchList.Add(matchedSymbol);
+
             }
 
-            bool isSymbolInUserWatchList = matchedUserWatchList.Symbols.Contains(matchedSymbol);
-
-            if (isSymbolInUserWatchList == true)
-            {
-                throw new Exception("this symbol allready exists in userWatchList");
-            }
-
-            matchedUserWatchList.Symbols.Add(matchedSymbol);
+            // add a list of symbols in one row code
+            matchedUserWatchList.Symbols.AddRange(symbolsToAddToUserWatchList);
 
             await _db.SaveChangesAsync();
 

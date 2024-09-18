@@ -26,18 +26,15 @@ interface Props {
 function WatchListFormDialog({ userWatchList }: Props) {
     console.log(userWatchList,"pppp")
     // conver the userWatchlIst.Symbols [symbol1,symbol2,...] to an array of stings. like "شیران,داتام" to ["داتام","شیران"]
-    // to prevent that the split()-method convert empty "" to [], i put a condition
     const defaultSymbols = userWatchList.symbols.map(symbol => {
         return symbol.symbolName!
     })
 
   // the states
-    const [open, setOpen] = useState(false);
-    const [inputValue, setInputValue] = useState(userWatchList.userWatchListName);
+  const [open, setOpen] = useState(false);
+  const [inputValue, setInputValue] = useState(userWatchList.userWatchListName);
   const [newSymbols, setNewSymbols] = useState(defaultSymbols);
   const { dataBaseSybmols, isLoading } = useSymbols();
-
-   
 
   const { updateWatchListMutate } = useUpdateWatchList();
 
@@ -49,21 +46,23 @@ function WatchListFormDialog({ userWatchList }: Props) {
     return symbol.symbolName;
   });
 
-    console.log(optionSymbols,"as")
 
   // this function is for updating the selected watch symbols and title
   const handleUpdateWatch = (
-    currentId: number,
-    currentTitle: string,
+    userWatchListId: string,
     newSymbols: string[]
+    //currentTitle: string,
   ) => {
-    const stringfyNewSymbolsArray = newSymbols.toString();
+      //const stringfyNewSymbolsArray = newSymbols.toString();
+  
+
+      console.log(newSymbols, "as")
 
     // update the watch
-    updateWatchListMutate({
-      id: currentId,
-      title: currentTitle,
-      symbols: stringfyNewSymbolsArray,
+      updateWatchListMutate({
+          userWatchListId: userWatchListId,
+          symbolNameList: newSymbols,
+      //title: currentTitle,
     });
 
     //in the end close the dialog
@@ -154,7 +153,7 @@ function WatchListFormDialog({ userWatchList }: Props) {
           </Button>
           <Button
             type="submit"
-            onClick={() => handleUpdateWatch(userWatchList.userWatchListId, inputValue, newSymbols)}
+            onClick={() => handleUpdateWatch(userWatchList.userWatchListId,newSymbols)}
             variant="contained"
             startIcon={<SaveOutlinedIcon color="secondary" />}
           >
