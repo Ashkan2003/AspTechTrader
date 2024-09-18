@@ -4,19 +4,20 @@ import { useCreateWatchList } from "../../features/reactQueryWatchList/useCreate
 
 interface Props {
   inputValue: string;
-  setInputValue: React.Dispatch<React.SetStateAction<string>>;
+    setInputValue: React.Dispatch<React.SetStateAction<string>>;
+  currentUserId:string
 }
 
-const UserWatchInput = ({ inputValue, setInputValue }: Props) => {
+const UserWatchInput = ({ inputValue, setInputValue, currentUserId }: Props) => {
   const { mutate } = useCreateWatchList();
 
   // this funcrion is for add a new watch to the watchList
   const handleInputAddBtn = async (watchName: string) => {
     // if the input value was empty dont do any thing
-    if (watchName == "") return null;
-    // send these information to useCreateWatchLists to create a new watchList
-    mutate(watchName);
-    // when the work finished,empty the input
+      if (watchName == "") return null;
+      // send these information to useCreateWatchLists to create a new watchList
+      mutate({ userWatchListName: watchName, userId: currentUserId });
+      // when the work finished,empty the input
     setInputValue("");
   };
   return (

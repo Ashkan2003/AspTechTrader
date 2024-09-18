@@ -64,10 +64,11 @@ namespace AspTechTrader.Api
                 options.AddDefaultPolicy(policybuilder =>
                 {   // add the front end domain to the origins
                     // get it from app.setting.json file
-                    policybuilder.WithOrigins(
-                        builder.Configuration.GetSection("AllowedOrigins").Get<string[]>())
+                    policybuilder.WithOrigins(builder.Configuration.GetSection("AllowedOrigins").Get<string[]>())
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
                     // enable cors-policy with eg: authorization-header
-                    .WithHeaders("Authorization", "origin", "accept", "content-type");
+                    .WithHeaders("Authorization", "origin", "accept", "content-type", "delete");
                 });
             });
 

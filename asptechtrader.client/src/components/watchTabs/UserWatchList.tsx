@@ -14,24 +14,22 @@ import { useDispatch } from "react-redux";
 import { updateReduxSymbols } from "../../GlobalRedux/Features/tableSymbols/tableSymbols-slice";
 import UserWatchInput from "./UserWatchInput";
 
+
+interface Props {
+    currentUser: any;
+}
+
 // this component is for adding, deleting,and updating a watch
-export default function UserWatchList() {
+export default function UserWatchList({currentUser }:Props) {
   const [inputValue, setInputValue] = useState(""); // the value of input
-  const [selectedIndex, setSelectedIndex] = useState(1); // the current selected watch from the list
-
-    //    const { isLoading, watchLists } = useUserWatchLists();
-    const isLoading = false;
-    const watchLists = [ {
-        id: 1,
-        title: "mylist",
-        symbols: "کوتر",
-        userId: "یبیبیب"
-    }]
+    const [selectedIndex, setSelectedIndex] = useState(1); // the current selected watch from the list
 
 
+
+  const { isLoading, userWatchList } = useUserWatchLists(currentUser.userId);
   const dispatch = useDispatch<AppDispatch>();
 
-  // if is loading return a skeleton
+   //if is loading return a skeleton
   if (isLoading)
     return (
       <Stack paddingTop={2} paddingX={1} spacing={1}>
@@ -52,6 +50,8 @@ export default function UserWatchList() {
         <Skeleton animation="wave" variant="rounded" width="full" height={35} />
       </Stack>
     );
+
+
 
   // this function is for activating the selected watch by adding some style
   const handleListItemClick = (
@@ -75,7 +75,7 @@ export default function UserWatchList() {
         }}
       >
         {/* the input fied */}
-        <UserWatchInput inputValue={inputValue} setInputValue={setInputValue} />
+        <UserWatchInput inputValue={inputValue} setInputValue={setInputValue} currentUserId={currentUser.userId} />
         {/* the list */}
         <List
           component="nav"
@@ -88,13 +88,13 @@ export default function UserWatchList() {
             maxHeight: 150,
             // "& ul": { padding: 0 },
           }}
-        >
-          {watchLists?.map((item, index) => (
+              >
+           {userWatchList?.map((item, index) => (
             <div
               className={`flex ${
                 selectedIndex === index && "bg-[#e6e8ea] dark:bg-[#212121]"
-              }`}
-              key={item.id}
+                       }`}
+                   key={item.userWatchListId}
             >
               <ListItemButton
                 // selected={selectedIndex === index}
@@ -105,18 +105,14 @@ export default function UserWatchList() {
                 <ListItemIcon>
                   <AccountTreeIcon color="info" />
                 </ListItemIcon>
-                <ListItemText primary={item.title} />
-              </ListItemButton>
-              {item.title === "دارایی های من" || ( // with this code i said that dont render(map) the  "دارایی های من"-watchList so the user canot delete or edit the first-watch-List
+                <ListItemText primary={item.userWatchListName} />
+                   </ListItemButton>
+               {item.userWatchListName === "دارایی های من" || ( // with this code i said that dont render(map) the  "دارایی های من"-watchList so the user canot delete or edit the first-watch-List
                 <div className="flex">
-                  {/* this is the dialog-btn */}
-                  <WatchListFormDialog
-                    watchId={item.id}
-                    watchTitle={item.title}
-                    watchSymbols={item.symbols}
-                  />
-                  {/*  this is the watch-list delete-btn */}
-                  <WatchListDeleteBtn itemId={item.id} />
+               {/* this is the dialog-btn */}
+               <WatchListFormDialog userWatchList={item} />
+               {/*  this is the watch-list delete-btn */}
+               <WatchListDeleteBtn userId={currentUser.userId} userWatchListId={item.userWatchListId} />
                 </div>
               )}
             </div>

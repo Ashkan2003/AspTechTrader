@@ -17,45 +17,27 @@ import { useUpdateWatchList } from "../../features/reactQueryWatchList/useUpdate
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import HighlightOffRounded from "@mui/icons-material/HighlightOffRounded";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
+import { userWatchListsType } from "../../types/types";
 
 interface Props {
-  watchTitle: string;
-  watchId: number;
-  watchSymbols: string;
+    userWatchList: userWatchListsType
 }
 
-function WatchListFormDialog({ watchId, watchTitle, watchSymbols }: Props) {
-  // conver the watchSymbols-string to an array of stings. like "شیران,داتام" to ["داتام","شیران"]
-  // to prevent that the split()-method convert empty "" to [], i put a condition
-  const defaultSymbols = watchSymbols === "" ? [] : watchSymbols.split(",");
+function WatchListFormDialog({ userWatchList }: Props) {
+    console.log(userWatchList,"pppp")
+    // conver the userWatchlIst.Symbols [symbol1,symbol2,...] to an array of stings. like "شیران,داتام" to ["داتام","شیران"]
+    // to prevent that the split()-method convert empty "" to [], i put a condition
+    const defaultSymbols = userWatchList.symbols.map(symbol => {
+        return symbol.symbolName!
+    })
 
   // the states
-  const [open, setOpen] = useState(false);
-  const [inputValue, setInputValue] = useState(watchTitle);
+    const [open, setOpen] = useState(false);
+    const [inputValue, setInputValue] = useState(userWatchList.userWatchListName);
   const [newSymbols, setNewSymbols] = useState(defaultSymbols);
-  // these are from react-query
-    //const { dataBaseSybmols, isLoading } = useSymbols();
+  const { dataBaseSybmols, isLoading } = useSymbols();
 
-    const isLoading = false
-    const dataBaseSybmols = [{
-        id: 1,
-        symbolName: 1,
-        volume: 1,
-        lastDeal: 1,
-        lastDealPercentage: 1,
-        lastPrice: 1,
-        lastPricePercentage: 1,
-        theFirst: 1,
-        theLeast: 1,
-        theMost: 1,
-        demandVolume: 1,
-        demandPrice: 1,
-        offerPrice: 1,
-        offerVolume: 1,
-        state: 1,
-        chartNumber: 1,
-    }]
-
+   
 
   const { updateWatchListMutate } = useUpdateWatchList();
 
@@ -66,6 +48,8 @@ function WatchListFormDialog({ watchId, watchTitle, watchSymbols }: Props) {
   const optionSymbols = dataBaseSybmols?.map((symbol) => {
     return symbol.symbolName;
   });
+
+    console.log(optionSymbols,"as")
 
   // this function is for updating the selected watch symbols and title
   const handleUpdateWatch = (
@@ -98,9 +82,9 @@ function WatchListFormDialog({ watchId, watchTitle, watchSymbols }: Props) {
     <>
       <IconButton onClick={handleClickOpen} size="medium">
         <EditCalendarIcon fontSize="inherit" color="info" />
-      </IconButton>
-      <Dialog maxWidth="sm" fullWidth open={open} onClose={handleClose}>
-        <DialogTitle>ویرایش دیده بان {watchTitle}</DialogTitle>
+          </IconButton>
+          <Dialog dir="rtl" maxWidth="sm" fullWidth open={open} onClose={handleClose}>
+        <DialogTitle>ویرایش دیده بان :  {userWatchList.userWatchListName}</DialogTitle>
         <Divider />
         <DialogContent sx={{ bgcolor: "ternery.main", py: "2rem" }}>
           <div className="flex items-center justify-between mb-16">
@@ -115,9 +99,9 @@ function WatchListFormDialog({ watchId, watchTitle, watchSymbols }: Props) {
             />
           </div>
           <div className="flex items-center justify-between">
-            <Typography>افزودن نماد به دیده بان:</Typography>
-            <Autocomplete
-              value={newSymbols}
+            <Typography >افزودن نماد به دیده بان :</Typography>
+                      <Autocomplete
+                          value={newSymbols}
               onChange={(event: any, newValue: any) => {
                 setNewSymbols(newValue);
               }}
@@ -127,7 +111,7 @@ function WatchListFormDialog({ watchId, watchTitle, watchSymbols }: Props) {
               options={optionSymbols!}
               getOptionLabel={(option) => option}
               // defaultValue={defualt}
-              filterSelectedOptions
+             filterSelectedOptions
               // these two func are the solution of the error
               renderOption={(props, option) => {
                 return (
@@ -169,8 +153,8 @@ function WatchListFormDialog({ watchId, watchTitle, watchSymbols }: Props) {
             بستن
           </Button>
           <Button
-            // type="submit"
-            onClick={() => handleUpdateWatch(watchId, inputValue, newSymbols)}
+            type="submit"
+            onClick={() => handleUpdateWatch(userWatchList.userWatchListId, inputValue, newSymbols)}
             variant="contained"
             startIcon={<SaveOutlinedIcon color="secondary" />}
           >

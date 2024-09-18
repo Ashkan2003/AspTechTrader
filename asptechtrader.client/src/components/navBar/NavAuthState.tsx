@@ -16,7 +16,6 @@ import { useGetCurrentUser } from "../../features/reactQueryUser/useGetCurrentUs
 const NavAuthState = () => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // this is for the menu-component
     const { currentUser, isLoadingUser, error } = useGetCurrentUser()
-
    if (isLoadingUser)
     return (
       <div className="flex items-center ps-3">

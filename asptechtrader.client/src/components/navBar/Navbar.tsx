@@ -84,7 +84,7 @@ export default function Navbar() {
               <HelpOutlineTwoToneIcon fontSize="inherit" color="secondary" />
             </IconButton>
                       <Divider orientation="vertical" flexItem />
-                      <IconButton onClick={handleClick} size="large">
+            <IconButton onClick={handleClick} size="large">
               <GridViewOutlinedIcon fontSize="inherit" color="secondary" />
             </IconButton>
           </Box>

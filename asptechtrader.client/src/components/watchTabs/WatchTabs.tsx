@@ -4,6 +4,7 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import TechWatchTabList from "./TechWatchTabList";
 import UserWatchList from "./UserWatchList";
+import { useGetCurrentUser } from "../../features/reactQueryUser/useGetCurrentUser";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -12,8 +13,7 @@ interface TabPanelProps {
 }
 
 function CustomTabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
+    const { children, value, index, ...other } = props;
  
   return (
     <div
@@ -34,11 +34,15 @@ function a11yProps(index: number) {
 }
 
 export default function WatchTabs() {
-  const [value, setValue] = React.useState(0);
-
+    const [value, setValue] = React.useState(0);
+    const { currentUser, isLoadingUser } = useGetCurrentUser()
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+    if (isLoadingUser) {
+        return null
+    }
 
   return (
     <Box
@@ -69,7 +73,7 @@ export default function WatchTabs() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <UserWatchList />
+        <UserWatchList currentUser={currentUser } />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <TechWatchTabList />

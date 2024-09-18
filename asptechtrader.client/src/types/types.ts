@@ -17,11 +17,11 @@ export type Symbol = {
   chartNumber        : string,
 }
 
-export type WatchList = {
-    id: number,
-    title: string,
-    symbols: string,
-    userId : string | null
+export type userWatchListsType = {
+    userWatchListId: string,
+    userId: string,
+    userWatchListName: string,
+    symbols: []
 
 }
 

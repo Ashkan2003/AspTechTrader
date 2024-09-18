@@ -32,7 +32,12 @@ namespace AspTechTrader.Infrastructure.Repositories
 
         public async Task<User?> GetUserByEmail(string emailAddress)
         {
-            User? matchedUser = await _db.Users.FirstOrDefaultAsync(temp => temp.EmailAddress == emailAddress);
+            User? matchedUser = await _db.Users
+                .Include(user => user.UserSymbolProperties)
+                .ThenInclude(userSymbolProperty => userSymbolProperty.Symbol)
+                .Include(user => user.UserWatchLists)
+                .ThenInclude(userWatchList => userWatchList.Symbols)
+                .FirstOrDefaultAsync(temp => temp.EmailAddress == emailAddress);
 
             return matchedUser;
         }

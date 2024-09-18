@@ -9,6 +9,7 @@ import { Toaster } from 'react-hot-toast';
 import Register from './pages/Register.tsx';
 import LogOut from './pages/LogOut.tsx';
 import ProtectedRoute from './pages/ProtectedRoute.tsx';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 
 
@@ -76,7 +77,7 @@ function App() {
                             },
                         }}
                     />
-                    {/*<ReactQueryDevtools initialIsOpen={false} />*/}
+                    <ReactQueryDevtools />
                 </QueryClientProvider>
             </MaterialUiRTLProvider>
          
