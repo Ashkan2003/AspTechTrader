@@ -5,8 +5,8 @@ import toast from "react-hot-toast";
 import { useSymbols } from "../../features/reactQuerySymbols/useSymbols";
 import { AppDispatch, useAppSelectore } from "../../GlobalRedux/store";
 import { useDispatch } from "react-redux";
-import { Symbol } from "../../types/types";
 import { updateCurrentSelectedTableSymbol } from "../../GlobalRedux/Features/tableSymbols/tableSymbols-slice";
+import { SymbolType } from "../../types/types";
 
 const columns: GridColDef[] = [
   {
@@ -129,8 +129,8 @@ export default function MainTable() {
    
 
   // get the selected-symbols-name that are selected by user from the watchTabsList
-  const reduxSymbols = useAppSelectore(
-    (state) => state.tableSymbolsReducer.reduxSymbols
+  const selectedUserWatchListSymbols = useAppSelectore(
+    (state) => state.tableSymbolsReducer.selectedUserWatchListSymbols
   );
   // get the mainSearchBarSymbol from redux
   const mainSearchBarSymbol = useAppSelectore(
@@ -160,23 +160,22 @@ export default function MainTable() {
 
   // we want to filter throg the entire db-symbols and return the symbols that symbleName in in reduxSymbols
     // boom. the magic happen here
-    let dataGridSymbols: Symbol[] | undefined;
+  let dataGridSymbols: SymbolType[] | undefined;
   switch (currentShowMode) {
-    case "userWatchList":
-      dataGridSymbols = dataBaseSybmols?.filter((symbol) => {
-        if (reduxSymbols.includes(symbol.symbolName)) {
-          return symbol;
-        }
-      });
-      break;
-    case "mainSearchBarSymbol":
+      case "userWatchList":
+          dataGridSymbols = selectedUserWatchListSymbols
+          break;
+
+      case "mainSearchBarSymbol":
       dataGridSymbols = dataBaseSybmols?.filter((symbol) => {
         return symbol.symbolName === mainSearchBarSymbol;
       });
-      break;
+          break;
+
     case "techTraderWatchList":
       dataGridSymbols = dataBaseSybmols;
-      break;
+          break;
+
     default:
       break;
   }

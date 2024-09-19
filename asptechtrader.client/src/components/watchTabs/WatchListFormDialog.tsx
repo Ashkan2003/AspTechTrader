@@ -24,10 +24,9 @@ interface Props {
 }
 
 function WatchListFormDialog({ userWatchList }: Props) {
-    console.log(userWatchList,"pppp")
     // conver the userWatchlIst.Symbols [symbol1,symbol2,...] to an array of stings. like "شیران,داتام" to ["داتام","شیران"]
     const defaultSymbols = userWatchList.symbols.map(symbol => {
-        return symbol.symbolName!
+        return symbol.symbolName
     })
 
   // the states
@@ -53,10 +52,6 @@ function WatchListFormDialog({ userWatchList }: Props) {
     newSymbols: string[]
     //currentTitle: string,
   ) => {
-      //const stringfyNewSymbolsArray = newSymbols.toString();
-  
-
-      console.log(newSymbols, "as")
 
     // update the watch
       updateWatchListMutate({

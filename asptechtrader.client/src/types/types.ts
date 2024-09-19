@@ -1,5 +1,5 @@
-export type Symbol = {
-  symbolId                 : number,
+export type SymbolType = {
+  symbolId           : number,
   symbolName         : string,
   volume             : number,
   lastDeal           : number,
@@ -21,7 +21,7 @@ export type userWatchListsType = {
     userWatchListId: string,
     userId: string,
     userWatchListName: string,
-    symbols: []
+    symbols: SymbolType[]
 
 }
 

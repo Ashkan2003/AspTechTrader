@@ -1,18 +1,18 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { Symbol } from "../../../types/types";
+import { SymbolType } from "../../../types/types";
 
 type mode = "userWatchList" | "techTraderWatchList" | "mainSearchBarSymbol";
 
 interface InitialState {
   currentShowMode: mode;
-  reduxSymbols: string;
+  selectedUserWatchListSymbols: SymbolType[];
     mainSearchBarSymbol: string;
-    currentSelectedTableSymbol: Symbol | null;
+    currentSelectedTableSymbol: SymbolType | null;
 }
 
 const initialState: InitialState = {
   currentShowMode: "techTraderWatchList", // we want to know, witch symbols to show in MainTable-component
-  reduxSymbols: "", // this is for the symbols that the user selected in his watchList
+  selectedUserWatchListSymbols: [], // this is for the symbols that the user selected in his watchList
   mainSearchBarSymbol: "", // this is for the symbol that is selected from the mainSearchBar
   currentSelectedTableSymbol: null, // this is the current symbol selected from table by user.we need this for showing the symbolInformation in symbolInfo-component
 };
@@ -20,10 +20,10 @@ const initialState: InitialState = {
 export const tableSymbols = createSlice({
   name: "tableSymbols",
   initialState,
-  reducers: {
-    updateReduxSymbols: (state, action: PayloadAction<string>) => {
+    reducers: {
+    updateCurrentShowedWatchListSymbols: (state, action: PayloadAction<SymbolType[]>) => {
       state.currentShowMode = "userWatchList"; // so if this reducer is fired, it means that the user selected one of its watchList,so change the mode to "userWatchList"
-      state.reduxSymbols = action.payload;
+      state.selectedUserWatchListSymbols = action.payload;
     },
     updateMainSearchBarSymbol: (state, action: PayloadAction<string>) => {
       state.currentShowMode = "mainSearchBarSymbol";
@@ -33,8 +33,8 @@ export const tableSymbols = createSlice({
       state.currentShowMode = action.payload;
     },
     updateCurrentSelectedTableSymbol: (
-      state,
-      action: PayloadAction<Symbol>
+        state,
+        action: PayloadAction<SymbolType>
     ) => {
       state.currentSelectedTableSymbol = action.payload;
     },
@@ -42,7 +42,7 @@ export const tableSymbols = createSlice({
 });
 
 export const {
-  updateReduxSymbols,
+  updateCurrentShowedWatchListSymbols,
   updateMainSearchBarSymbol,
   updateCurrentShowedMode,
   updateCurrentSelectedTableSymbol

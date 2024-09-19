@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { Symbol } from "../../types/types";
+import { SymbolType } from "../../types/types";
 
 // this is a custom-hook for fetching the symbols from db with reactQuery and axios
 export const useSymbols = () => {
@@ -8,7 +8,7 @@ export const useSymbols = () => {
     data: dataBaseSybmols,
     isLoading,
       error,
-  } = useQuery<Symbol[]>({
+  } = useQuery<SymbolType[]>({
       queryKey: ["symbols"], // the queryKey is a unic key to identify the data in the cash
       queryFn: async () => axios({
           method: "get",

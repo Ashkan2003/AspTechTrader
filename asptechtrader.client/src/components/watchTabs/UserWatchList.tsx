@@ -11,8 +11,9 @@ import WatchListDeleteBtn from "./WatchListDeleteBtn";
 import WatchListFormDialog from "./WatchListFormDialog";
 import { AppDispatch } from "../../GlobalRedux/store";
 import { useDispatch } from "react-redux";
-import { updateReduxSymbols } from "../../GlobalRedux/Features/tableSymbols/tableSymbols-slice";
+import { updateCurrentShowedWatchListSymbols } from "../../GlobalRedux/Features/tableSymbols/tableSymbols-slice";
 import UserWatchInput from "./UserWatchInput";
+import { SymbolType } from "../../types/types";
 
 
 interface Props {
@@ -56,12 +57,12 @@ export default function UserWatchList({currentUser }:Props) {
   // this function is for activating the selected watch by adding some style
   const handleListItemClick = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    index: number,
-    selectedWatchSymbols: string
+      index: number,
+      selectedWatchSymbols: SymbolType[]
   ) => {
     setSelectedIndex(index);
-    // every time the user selects a watch then send this watch-symbols to the redux
-    dispatch(updateReduxSymbols(selectedWatchSymbols));
+      // every time the user selects a watch then send this watch-symbols to the redux
+    dispatch(updateCurrentShowedWatchListSymbols(selectedWatchSymbols));
   };
 
   return (
@@ -98,8 +99,8 @@ export default function UserWatchList({currentUser }:Props) {
             >
               <ListItemButton
                 // selected={selectedIndex === index}
-                onClick={(event) =>
-                  handleListItemClick(event, index, item.symbols)
+                       onClick={(event) =>
+                       handleListItemClick(event, index, item.symbols)
                 }
               >
                 <ListItemIcon>
