@@ -5,10 +5,10 @@ import { useState } from "react";
 import SupplyDemandTab from "./SupplyDemandTab";
 import SymbolInfoBox from "./SymbolInfoBox";
 import SymbolChart from "./SymbolChart";
-import { useSymbols } from "/app/features/reactQuerySymbols/useSymbols";
 import SymbolPieChart from "./SymbolPieChart";
 import { Stack, Skeleton } from "@mui/material";
 import { useAppSelectore } from "../../GlobalRedux/store";
+import { useSymbols } from "../../features/reactQuerySymbols/useSymbols";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -40,31 +40,9 @@ function a11yProps(index: number) {
 }
 
 export default function SymbolInfo() {
-    const [value, setValue] = useState(0);
-
-    //const { dataBaseSybmols, isLoading } = useSymbols();
-    const isLoading = false
-    const dataBaseSybmols = [{
-        id: 1,
-        symbolName: 1,
-        volume: 1,
-        lastDeal: 1,
-        lastDealPercentage: 1,
-        lastPrice: 1,
-        lastPricePercentage: 1,
-        theFirst: 1,
-        theLeast: 1,
-        theMost: 1,
-        demandVolume: 1,
-        demandPrice: 1,
-        offerPrice: 1,
-        offerVolume: 1,
-        state: "ALLOWED",
-        chartNumber: 1,
-    }]
-
-
-
+  const [value, setValue] = useState(0);
+  const { dataBaseSybmols, isLoading } = useSymbols();
+ 
   const currentReduxSymbol = useAppSelectore(
     (state) => state.tableSymbolsReducer.currentSelectedTableSymbol
   );
@@ -87,6 +65,22 @@ export default function SymbolInfo() {
   // in the first enter of user the currentReduxSymbol is null.so render the first item of db
   const currentSymbol =
     currentReduxSymbol == null ? dataBaseSybmols?.at(0) : currentReduxSymbol;
+
+    if (currentSymbol == null) {
+        return (
+            <Stack paddingTop={2} paddingX={1} spacing={1}>
+                <Stack gap={1} justifyContent="center" flexDirection="row">
+                    <Skeleton animation="wave" variant="rounded" width={73} height={50} />
+                    <Skeleton animation="wave" variant="rounded" width={73} height={50} />
+                    <Skeleton animation="wave" variant="rounded" width={73} height={50} />
+                    <Skeleton animation="wave" variant="rounded" width={73} height={50} />
+                </Stack>
+                <Skeleton animation="wave" variant="rounded" width="full" height={35} />
+                <Skeleton animation="wave" variant="rounded" width="full" height={55} />
+                <Skeleton animation="wave" variant="rounded" width="full" height={165} />
+            </Stack>
+        );
+    }
 
   //  this function is for the tab-changes
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -129,21 +123,21 @@ export default function SymbolInfo() {
           />
         </Tabs>
       </Box>
-      {/*<CustomTabPanel value={value} index={0}>*/}
-      {/*  <SupplyDemandTab currentSymbol={currentSymbol!} />*/}
-      {/*</CustomTabPanel>*/}
-      {/*<CustomTabPanel value={value} index={1}>*/}
-      {/*  <SymbolInfoBox currentSymbol={currentSymbol!} />*/}
-      {/*</CustomTabPanel>*/}
-      {/*<CustomTabPanel value={value} index={2}>*/}
-      {/*  */}{/*<SymbolChart data={currentSymbol!.chartNumber!} />*/}
-      {/*</CustomTabPanel>*/}
-      {/*<CustomTabPanel value={value} index={3}>*/}
-      {/*  <SymbolPieChart*/}
-      {/*    offerVolume={currentSymbol?.offerVolume!}*/}
-      {/*    demandVolume={currentSymbol?.demandVolume!}*/}
-        {/*/>*/}
-      {/*</CustomTabPanel>*/}
+      <CustomTabPanel value={value} index={0}>
+        <SupplyDemandTab currentSymbol={currentSymbol!} />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={1}>
+        <SymbolInfoBox currentSymbol={currentSymbol!} />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={2}>
+        <SymbolChart />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={3}>
+        <SymbolPieChart
+          offerVolume={currentSymbol.offerVolume}
+          demandVolume={currentSymbol.demandVolume}
+        />
+      </CustomTabPanel>
     </Box>
   );
 }

@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import Badge from "../../ui/Badge";
-import { Symbol } from "../../types/types";
+import { SymbolType } from "../../types/types";
 
 function createData(buyCount: number, buyVolume: number, buyPrice: number) {
   return { buyCount, buyVolume, buyPrice };
@@ -24,7 +24,7 @@ const rows = [
 ];
 
 interface Props {
-    currentSymbol: Symbol;
+    currentSymbol: SymbolType;
 }
 
 const SupplyDemandTab = ({ currentSymbol }: Props) => {

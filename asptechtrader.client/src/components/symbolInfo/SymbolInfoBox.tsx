@@ -1,8 +1,8 @@
-import { Symbol } from "../../types/types";
+import {  SymbolType } from "../../types/types";
 import InfoBox from "../../ui/InfoBox";
 
 interface Props {
-    currentSymbol: Symbol;
+    currentSymbol: SymbolType;
 }
 
 const SymbolInfoBox = ({ currentSymbol }: Props) => {
