@@ -14,10 +14,10 @@ import {
 import { useState } from "react";
 import BuySaleDialogTitle from "./BuySaleDialogTitle";
 import BuySaleTabList from "./BuySaleTabList";
-import { Symbol } from "../../types/types";
+import { SymbolType } from "../../types/types";
 
 interface Props {
-    currentSymbol: Symbol;
+    currentSymbol: SymbolType;
 }
 
 function BuySaleDialog({ currentSymbol }: Props) {
@@ -95,8 +95,8 @@ function BuySaleDialog({ currentSymbol }: Props) {
         onClick={handleClickOpenSaleDialog}
       >
         <Typography className="text-red-600">فروش</Typography>
-      </Button>
-      <Dialog maxWidth="sm" fullWidth open={open} onClose={handleClose}>
+          </Button>
+          <Dialog dir="rtl" maxWidth="sm" fullWidth open={open} onClose={handleClose}>
         {/* the dialog title section */}
         <BuySaleDialogTitle
           symbolName={currentSymbol.symbolName}

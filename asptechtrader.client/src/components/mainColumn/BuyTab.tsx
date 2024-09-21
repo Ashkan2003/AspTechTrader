@@ -1,37 +1,38 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { TextField, Button, Typography } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import toast from "react-hot-toast";
-import { Symbol, UserBoughtSymbol, userTradeAccountType, WatchList } from "../../types/types";
-import { useBuySymbol } from "../../features/reactQueryTradeAccount/useBuySymbol";
-import { useUpdateWatchList } from "../../features/reactQueryWatchList/useUpdateWatchList";
+import { useBuySymbol } from "../../features/reactQueryUserSymbolProperty/useBuySymbol";
+import { SymbolType,  UserType, userWatchListsType } from "../../types/types";
 
 interface Props {
-    currentSymbol: Symbol;
-    userProperyWatchList: WatchList;
-  currentBoughtSymbolCount: number;
+    currentSymbol: SymbolType;
+    userProperyWatchList: userWatchListsType;
+    currentBoughtSymbolQuantity: number;
+    currentBoughtSymbolId: string;
   priceInputValue: number;
   volumeInputValue: number;
   todayDate: string;
-  userCurrentBoughtSymbol: UserBoughtSymbol;
+  //userCurrentBoughtSymbol: UserBoughtSymbol;
   setPriceInputValue: React.Dispatch<React.SetStateAction<number>>;
   setVolumeInputValue: React.Dispatch<React.SetStateAction<number>>;
 
-  userTradeAccount: userTradeAccountType;
+    currentUser: UserType;
   handleSetUserBoughtSymbolCountToVulomeInput: any;
   handleClose: any;
 }
 
 const BuyTab = ({
   currentSymbol,
-  userProperyWatchList,
-  currentBoughtSymbolCount,
+    currentBoughtSymbolQuantity,
+    currentBoughtSymbolId,
   priceInputValue,
   volumeInputValue,
   todayDate,
-  userCurrentBoughtSymbol,
+  //userCurrentBoughtSymbol,
   setPriceInputValue,
-  setVolumeInputValue,
-  userTradeAccount,
+    setVolumeInputValue,
+    currentUser,
   handleClose,
   handleSetUserBoughtSymbolCountToVulomeInput,
 }: Props) => {
@@ -41,14 +42,12 @@ const BuyTab = ({
     //react-query // update
     const { mutate } = useBuySymbol();
 
-  //react-qury // update user-watch-list
-  const { updateWatchListMutate } = useUpdateWatchList();
 
-  //
-  const userCurrentProperty = userTradeAccount?.userProperty;
+    //
+    const userCurrentProperty = currentUser.userProperty;
 
-  //when the user clicks on the buy btn run this...
-  const handleFinalBuy = (userCurrentBoughtSymbol: UserBoughtSymbol) => {
+    //when the user clicks on the buy btn run this...
+    const handleFinalBuy = () => {
     // if the state was notAllowed so dont let the user buy or sale it
     if (currentSymbol.state == "NOTALLOWED") {
       toast.error("وضعیت نماد درحالت ممنوع معامله قرار دارد.");
@@ -81,22 +80,16 @@ const BuyTab = ({
 
     // update the bought-symbol
     mutate(
-      {
-        currentTradeAccountId: userTradeAccount?.id!,
-        currentBoughtSymbol: userCurrentBoughtSymbol,
-        newboughtSymbolName: currentSymbol.symbolName,
-        newboughtSymbolCount: volumeInputValue,
-        userNewProperty: userNewProperty,
+        {
+            symbolPrice: priceInputValue,
+            symbolQuantity: volumeInputValue,
+            symbolId: currentBoughtSymbolId,
+            userId: currentUser.userId,
       },
       {
         onSuccess: () => {
           // when the update-mutate of the saling a symbol was successfull update the watch
-          updateWatchListMutate({
-            id: userProperyWatchList.id,
-            title: "دارایی های من",
-            symbols:
-              userProperyWatchList.symbols + "," + currentSymbol.symbolName,
-          });
+          
         },
       }
     );
@@ -129,11 +122,11 @@ const BuyTab = ({
           color="info"
           id="filled-read-only-input"
           label="دارایی سپرده گزاری"
-          value={currentBoughtSymbolCount}
+                  value={currentBoughtSymbolQuantity}
           onClick={(event: any) =>
             handleSetUserBoughtSymbolCountToVulomeInput(
               event,
-              currentBoughtSymbolCount
+                currentBoughtSymbolQuantity
             )
           }
           InputProps={{
@@ -175,7 +168,7 @@ const BuyTab = ({
           variant="outlined"
           color="warning"
           startIcon={<ShoppingCartIcon className="text-green-600" />}
-          onClick={() => handleFinalBuy(userCurrentBoughtSymbol)}
+          onClick={() => handleFinalBuy()}
         >
           <Typography className="text-green-600">خرید</Typography>
         </Button>

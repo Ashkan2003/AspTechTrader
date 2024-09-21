@@ -1,5 +1,6 @@
 ﻿using AspTechTrader.Core.Domain.Entities;
 using AspTechTrader.Core.Domain.RepositoryContracts;
+using AspTechTrader.Core.DTO;
 using AspTechTrader.Infrastructure.AppDbContext;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,11 +34,20 @@ namespace AspTechTrader.Infrastructure.Repositories
 
         }
 
+        public async Task<bool> UpdateUserSymbolProperty(UserSymbolPropertyUpdateRequestDTO userSymbolPropertyUpdateDTO)
+        {
+
+            UserSymbolProperty? matchedUserSymbolProperty = await _db.UserSymbolProperties.FirstOrDefaultAsync(temp => temp.UserSymbolPropertyId == userSymbolPropertyUpdateDTO.UserSymbolPropertyId);
+
+            matchedUserSymbolProperty.SymbolPrice = userSymbolPropertyUpdateDTO.SymbolPrice;
+            matchedUserSymbolProperty.SymbolQuantity = userSymbolPropertyUpdateDTO.SymbolQuantity;
 
 
+            var count = await _db.SaveChangesAsync();
+
+            return count > 0 ? true : false;
 
 
-
-
+        }
     }
 }

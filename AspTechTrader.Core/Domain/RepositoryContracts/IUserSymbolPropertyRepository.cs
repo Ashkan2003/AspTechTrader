@@ -12,5 +12,8 @@ namespace AspTechTrader.Core.Domain.RepositoryContracts
         /// <param name="userSymbolProperty"></param>
         /// <returns></returns>
         public Task<User> AddNewBoughtSymbol(UserSymbolProperty userSymbolProperty);
+
+        public Task<bool> UpdateUserSymbolProperty(UserSymbolPropertyUpdateRequestDTO userSymbolPropertyUpdateDTO);
+
     }
 }

@@ -4,9 +4,8 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../GlobalRedux/store";
-import { useSymbols } from "../../features/reactQuerySymbols/useSymbols";
 import { updateCurrentSelectedTableSymbol } from "../../GlobalRedux/Features/tableSymbols/tableSymbols-slice";
-import { useUserTradeAccount } from "../../features/reactQueryTradeAccount/useUserTradeAccount";
+import { useGetCurrentUser } from "../../features/reactQueryUser/useGetCurrentUser";
 
 const columns: GridColDef[] = [
   {
@@ -50,55 +49,14 @@ const columns: GridColDef[] = [
   },
 ];
 
-interface datagridRowType {
-  id: number;
-  symbolName: string;
-  count: number;
-  lastPrice: number;
-  lastPricePercentage: number;
-  state: "ALLOWED" | "NOTALLOWED";
-}
 
 export default function UserPropertyTable() {
-  const dispatch = useDispatch<AppDispatch>();
-
-  // fetch all the symbols from the db
-   // const { dataBaseSybmols, isLoading } = useSymbols();
-    const isLoading = false
-    const dataBaseSybmols = [{
-        id: 1,
-        symbolName: 1,
-        volume: 1,
-        lastDeal: 1,
-        lastDealPercentage: 1,
-        lastPrice: 1,
-        lastPricePercentage: 1,
-        theFirst: 1,
-        theLeast: 1,
-        theMost: 1,
-        demandVolume: 1,
-        demandPrice: 1,
-        offerPrice: 1,
-        offerVolume: 1,
-        state: 1,
-        chartNumber: 1,
-    }]
-
-  // fetch the userTradeAccount from the db
-  const { userTradeAccount, isLoadingTradeAccount, error } =
-    useUserTradeAccount();
-
-    const userBoughtSymbols = [{
-        id: 1,
-        symbolName: "ssssss",
-        count: 50,
-        tradeAccountId:4
-
-    }]
+    const dispatch = useDispatch<AppDispatch>();
+    const { currentUser, isLoadingUser, error } = useGetCurrentUser()
 
 
-  // if is loading return a skeleton
-  if (isLoadingTradeAccount || isLoading)
+    // if is loading return a skeleton
+    if (isLoadingUser)
     return (
       <Stack paddingTop={1} spacing={1}>
         <Skeleton
@@ -113,45 +71,25 @@ export default function UserPropertyTable() {
   // if there was an error then retune a toast
   if (error) return toast.error("اخطار.لطفا اتصال اینترنت خود را چک کنید.");
 
-  let dataGridRows: datagridRowType[] = [];
-  // i want more information to put in data-grid-table about a symbol, but i only stored "symbolName" and "count" in the userBoughtSymbol
-  // so i loop throgh the dataBaseSymbols and find the userBoughtSymbols and push a new obj with a combine-information of bgsymbol and userBoughtSymbol
-    //userTradeAccount!.userBoughtSymbols
-    userBoughtSymbols.map(
-    (boughtSymbol: { id: number; symbolName: string; count: number }) => {
-      dataBaseSybmols?.map((dbSymbol) => {
-        if (dbSymbol.symbolName === boughtSymbol.symbolName) {
-          dataGridRows.push({
-            id: dbSymbol.id,
-            symbolName: dbSymbol.symbolName,
-            lastPrice: dbSymbol.lastPrice,
-            lastPricePercentage: dbSymbol.lastPricePercentage,
-            state: dbSymbol.state,
-            count: boughtSymbol.count,
-          });
-        }
-      });
-    }
-  );
-
-  const rows = dataGridRows.map((symbol) => {
-    return {
-      id: symbol.id,
-      symbolName: symbol.symbolName,
-      volume: symbol.count,
-      lastPrice: symbol.lastPrice,
-      lastPricePercentage: `${symbol.lastPricePercentage}%`,
-      state: symbol.state === "ALLOWED" ? "مجاز" : "ممنوع",
+    const rows = currentUser?.userSymbolProperties.map((userSymbolProperty) => {
+        return {
+            id: userSymbolProperty.symbolId,
+            symbolName: userSymbolProperty.symbol.symbolName,
+            volume: userSymbolProperty.symbolQuantity,
+            lastPrice: userSymbolProperty.symbolPrice,
+            lastPricePercentage: `${userSymbolProperty.symbol.lastPricePercentage}%`,
+            state: userSymbolProperty.symbol.state === "ALLOWED" ? "مجاز" : "ممنوع",
     };
   });
 
   // this function is for finding the selected symbol and give it to the redux
-  function handleRowSelectionClick(currentSymbolName: string) {
-    // find the current-selected-symbol from the table and return it
-    const currentSelectedTableSymbol = dataBaseSybmols!.find((symbol: any) => {
-      return symbol.symbolName === currentSymbolName;
-    });
-    dispatch(updateCurrentSelectedTableSymbol(currentSelectedTableSymbol!));
+    function handleRowSelectionClick(currentSymbolId: string) {
+        console.log(currentSymbolId)
+      // find the current-selected-symbol from the table and return it
+      const currentSelectedUserSymbolProperty = currentUser?.userSymbolProperties!.find((userSymbolProperty: any) => {
+          return userSymbolProperty.symbolId == currentSymbolId
+      });
+      dispatch(updateCurrentSelectedTableSymbol(currentSelectedUserSymbolProperty.symbol!));
   }
 
   return (
@@ -164,10 +102,10 @@ export default function UserPropertyTable() {
     >
       <DataGrid
         sx={{ height: { xs: 260, md: 260 } }}
-        loading={isLoadingTradeAccount}
+        loading={isLoadingUser}
         scrollbarSize={10}
         columnHeaderHeight={40}
-        onRowClick={(event) => handleRowSelectionClick(event.row.symbolName)}
+        onRowClick={(event) => handleRowSelectionClick(event.row.id)}
         rowHeight={35}
         rows={rows!}
         columns={columns}

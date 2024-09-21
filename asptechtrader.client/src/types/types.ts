@@ -1,5 +1,5 @@
 export type SymbolType = {
-  symbolId           : number,
+  symbolId         : string,
   symbolName         : string,
   volume             : number,
   lastDeal           : number,
@@ -35,6 +35,24 @@ export type UserBoughtSymbol = {
   //tradeAccountId      Int
 }
 
+export type UserType = {
+    userId: string;
+    userName: string;
+    emailAddress: string;
+    userProperty: number;
+    userSymbolProperties: UserSymbolProperties[];
+    userWatchList: userWatchListsType;
+
+}
+
+export type UserSymbolProperties = {
+    userSymbolPropertyId: string;
+    symbolPrice: number;
+    symbolQuantity: number;
+    userId: string;
+    symbolId: string;
+    symbol: SymbolType;
+}
 
 export type userTradeAccountType = {
     id: number;

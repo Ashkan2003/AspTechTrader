@@ -4,7 +4,8 @@ import Tabs from "@mui/material/Tabs";
 import BuyTab from "./BuyTab";
 import SaleTab from "./SaleTab";
 import { useAppSelectore } from "../../GlobalRedux/store";
-import { useUserTradeAccount } from "../../features/reactQueryTradeAccount/useUserTradeAccount";
+import { useGetCurrentUser } from "../../features/reactQueryUser/useGetCurrentUser";
+import { UserSymbolProperties } from "../../types/types";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -61,48 +62,37 @@ export default function BuySaleTabList({
     (state) => state.tableSymbolsReducer.currentSelectedTableSymbol
   );
 
-  // react-query // fetch the userTradeAccount from the db
-    const { userTradeAccount, isLoadingTradeAccount, error } =
-        useUserTradeAccount();
+    // react-query
+    const { currentUser, isLoadingUser } = useGetCurrentUser()
+   
+    if (isLoadingUser) return null;
 
-  // react-query // get user watchLists
-   // const { watchLists, isLoading } = useUserWatchLists();
-   const isLoading =false
-    const watchLists = [{
-        id: 1,
-        title: "qwqwq",
-        symbols: "qwqwq",
-        userId: "sdsd"
-    }]
-
-  if (isLoadingTradeAccount || isLoading) return null;
-
-  //get the "دارایی های من"-watchList from db
-  const userProperyWatchList = watchLists?.find((item) => {
-    return item.title === "دارایی های من";
-  });
-
-  // get the symbols that user bought
-  const userBoughtSymbols = userTradeAccount?.userBoughtSymbols;
+    // get the symbols that user bought
+    const userSymbolProperties = currentUser?.userSymbolProperties;
 
   // explanation
   // we have an currentSymbol that is the current-selected-symbol by user from the main col that is stored in redux
   // in the other hand, we have a array of symbols that the user bought priviosily
-  // so for fatcing this symbol name and count i looped throug the userBoughtSymbols and find it
-  const userCurrentBoughtSymbol = userBoughtSymbols!.find(
-    (boughtSymbol: { symbolName: string; count: number }) => {
-      if (boughtSymbol.symbolName === currentSymbol?.symbolName)
-        return boughtSymbol;
+    // so for fatcing this symbol name and count i looped throug the userBoughtSymbols and find it
+    const userCurrentBoughtSymbol: UserSymbolProperties | undefined = userSymbolProperties!.find(userSymbolProperty => {
+        if (userSymbolProperty.symbolId === currentSymbol?.symbolId)
+            return userSymbolProperty;
     }
-  );
+    );
+   
+
+    //get the currentBoughtSymbol symbolID.if its undfind it means that the user dont bought this symbol-previosly,so set it to currentSelectedSymbol.ID
+    const currentBoughtSymbolId = userCurrentBoughtSymbol
+        ? userCurrentBoughtSymbol.symbolId
+        : currentSymbol?.symbolId
 
   // get the currentBoughtSymbol count.if its undfind it means that the user dont bought this symbol-previosly,so set it 0
-  const currentBoughtSymbolCount = userCurrentBoughtSymbol
-    ? userCurrentBoughtSymbol.count
-    : 0;
+    const currentBoughtSymbolQuantity = userCurrentBoughtSymbol
+        ? userCurrentBoughtSymbol.symbolQuantity
+        : 0;
 
   // get todey-date in farsi-date
-  let todayDate = new Date().toLocaleDateString("fa-IR");
+  const todayDate = new Date().toLocaleDateString("fa-IR");
 
   // this function is for the selection of the tab
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -133,33 +123,34 @@ export default function BuySaleTabList({
       <CustomTabPanel value={tabListIndexvalue} index={0}>
         <BuyTab
           currentSymbol={currentSymbol!}
-          userProperyWatchList={userProperyWatchList!}
-          currentBoughtSymbolCount={currentBoughtSymbolCount}
+          currentUser={currentUser!}
+                  currentBoughtSymbolQuantity={currentBoughtSymbolQuantity}
+                  currentBoughtSymbolId={currentBoughtSymbolId!}
           priceInputValue={priceInputValue}
           volumeInputValue={volumeInputValue}
           todayDate={todayDate}
-          userCurrentBoughtSymbol={userCurrentBoughtSymbol!}
-          setPriceInputValue={setPriceInputValue}
-          setVolumeInputValue={setVolumeInputValue}
-          userTradeAccount={userTradeAccount!}
           handleClose={handleClose}
           handleSetUserBoughtSymbolCountToVulomeInput={
             handleSetUserBoughtSymbolCountToVulomeInput
           }
+          setPriceInputValue={setPriceInputValue}
+          setVolumeInputValue={setVolumeInputValue}
+
+       
         />
       </CustomTabPanel>
       <CustomTabPanel value={tabListIndexvalue} index={1}>
         <SaleTab
           currentSymbol={currentSymbol!}
-          userProperyWatchList={userProperyWatchList!}
-          currentBoughtSymbolCount={currentBoughtSymbolCount}
+        //  userProperyWatchList={userProperyWatchList!}
+                  currentBoughtSymbolQuantity={currentBoughtSymbolQuantity}
           priceInputValue={priceInputValue}
           volumeInputValue={volumeInputValue}
           todayDate={todayDate}
           userCurrentBoughtSymbol={userCurrentBoughtSymbol!}
           setPriceInputValue={setPriceInputValue}
-          setVolumeInputValue={setVolumeInputValue}
-          userTradeAccount={userTradeAccount!}
+                  setVolumeInputValue={setVolumeInputValue}
+                  userTradeAccount={currentUser}
           handleClose={handleClose}
           handleSetUserBoughtSymbolCountToVulomeInput={
             handleSetUserBoughtSymbolCountToVulomeInput

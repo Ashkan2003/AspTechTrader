@@ -1,4 +1,3 @@
-import { UserBoughtSymbol } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -8,19 +7,25 @@ export const useBuySymbol = () => {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
-    mutationFn: (data: {
-      currentTradeAccountId: number;
-      currentBoughtSymbol: UserBoughtSymbol;
-      newboughtSymbolName: string;
-      newboughtSymbolCount: number;
-      userNewProperty: number;
-    }) => {
+      mutationFn: (data: {
+          symbolPrice: number,
+          symbolQuantity: number,
+          userId: string,
+          symbolId: string
+      }) => { 
       // becuse the endpoint-request is "upsert" so we used "put" inisted of the "patch"
-      return axios.put("/api/currentUserTradeAccount", data);
+      return axios({
+              method: "post",
+              url:"https://localhost:7007/api/UserSymbolProperty/AddNewBoughtSymbol",
+              headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`
+              },
+              data: data
+      });
     },
     onSuccess: () => {
       toast.success("سفارش خرید شما با موفقیت ثبت شد.");
-      queryClient.invalidateQueries({ queryKey: ["userTradeAccount"] });
+      queryClient.invalidateQueries({ queryKey: ["current-user"] });
       queryClient.invalidateQueries({ queryKey: ["symbols"] });
     },
     onError: (error) => {

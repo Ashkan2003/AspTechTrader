@@ -1,21 +1,21 @@
 import { TextField, Button, Typography } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import toast from "react-hot-toast";
-import { Symbol, UserBoughtSymbol, userTradeAccountType, WatchList } from "../../types/types";
+import { Symbol, UserBoughtSymbol, userTradeAccountType, UserType, WatchList } from "../../types/types";
 import { useUpdateWatchList } from "../../features/reactQueryWatchList/useUpdateWatchList";
 import { useSaleSymbol } from "../../features/reactQueryTradeAccount/useSaleSymbol";
 
 interface Props {
     currentSymbol: Symbol;
     userProperyWatchList: WatchList;
-  currentBoughtSymbolCount: number;
+    currentBoughtSymbolQuantity: number;
   priceInputValue: number;
   volumeInputValue: number;
   todayDate: string;
   userCurrentBoughtSymbol: UserBoughtSymbol;
   setPriceInputValue: React.Dispatch<React.SetStateAction<number>>;
-  setVolumeInputValue: React.Dispatch<React.SetStateAction<number>>;
-  userTradeAccount: userTradeAccountType;
+    setVolumeInputValue: React.Dispatch<React.SetStateAction<number>>;
+    userTradeAccount: UserType;
   handleSetUserBoughtSymbolCountToVulomeInput: any;
   handleClose: any;
 }
@@ -23,7 +23,7 @@ interface Props {
 const SaleTab = ({
   currentSymbol,
   userProperyWatchList,
-  currentBoughtSymbolCount,
+    currentBoughtSymbolQuantity,
   priceInputValue,
   volumeInputValue,
   todayDate,
@@ -140,11 +140,11 @@ const SaleTab = ({
           color="info"
           id="filled-read-only-input"
           label="دارایی سپرده گزاری"
-          value={currentBoughtSymbolCount}
+                  value={currentBoughtSymbolQuantity}
           onClick={(event: any) =>
             handleSetUserBoughtSymbolCountToVulomeInput(
               event,
-              currentBoughtSymbolCount
+                currentBoughtSymbolQuantity
             )
           }
           InputProps={{

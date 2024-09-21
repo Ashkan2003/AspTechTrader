@@ -6,8 +6,8 @@ type mode = "userWatchList" | "techTraderWatchList" | "mainSearchBarSymbol";
 interface InitialState {
   currentShowMode: mode;
   selectedUserWatchListSymbols: SymbolType[];
-    mainSearchBarSymbol: string;
-    currentSelectedTableSymbol: SymbolType | null;
+  mainSearchBarSymbol: string;
+  currentSelectedTableSymbol: SymbolType | null;
 }
 
 const initialState: InitialState = {

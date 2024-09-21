@@ -45,26 +45,52 @@ namespace AspTechTrader.Core.Services
                 throw new ArgumentException("no symbol founded with the given SymbolId");
             }
 
-            // check for duplication of userSymbolProperty
+            // check if the user bought this symbol previosly or not
             UserSymbolProperty? matchedUserSymbolProperty = matchedUser.UserSymbolProperties.FirstOrDefault(temp => temp.SymbolId == userBoughtSymbolAddRequest.SymbolId);
 
+            // if the user has this symbol already in his userSymbolProperties // this symbol was bought by user previosly
+            // dont create a newUserSymbolProperty, in other hand update the price and quantity fild
             if (matchedUserSymbolProperty != null)
             {
-                throw new Exception("user already have this symbol");
+
+                int privioseBoughtSymbolQuantity = matchedUserSymbolProperty.SymbolQuantity;
+
+                //sum symbol-previose-quantity with  currentBoughtQuantity
+                matchedUserSymbolProperty.SymbolQuantity = privioseBoughtSymbolQuantity + userBoughtSymbolAddRequest.SymbolQuantity;
+
+                matchedUserSymbolProperty.SymbolPrice = userBoughtSymbolAddRequest.SymbolPrice;
+
+                UserSymbolPropertyUpdateRequestDTO userSymbolPropertyUpdateRequestDTO = new UserSymbolPropertyUpdateRequestDTO()
+                {
+                    UserSymbolPropertyId = matchedUserSymbolProperty.UserSymbolPropertyId,
+
+                    SymbolQuantity = privioseBoughtSymbolQuantity + userBoughtSymbolAddRequest.SymbolQuantity,
+                    SymbolPrice = userBoughtSymbolAddRequest.SymbolPrice,
+                };
+
+                bool isSuccess = await _userSymbolPropertyRepository.UpdateUserSymbolProperty(userSymbolPropertyUpdateRequestDTO);
+                return matchedUser;
+            }
+            // if the user dont have this symbol already in his userSymbolProperties // user wants to buy this symbol in this time
+            else
+            {
+
+                UserSymbolProperty newUserSymbolPropertyToAdd = new UserSymbolProperty()
+                {
+                    SymbolQuantity = userBoughtSymbolAddRequest.SymbolQuantity,
+                    SymbolPrice = userBoughtSymbolAddRequest.SymbolPrice,
+
+                    UserId = userBoughtSymbolAddRequest.UserId,
+                    SymbolId = userBoughtSymbolAddRequest.SymbolId
+                };
+
+                User user = await _userSymbolPropertyRepository.AddNewBoughtSymbol(newUserSymbolPropertyToAdd);
+
+                return user;
+
             }
 
-            UserSymbolProperty newUserSymbolPropertyToAdd = new UserSymbolProperty()
-            {
-                SymbolQuantity = userBoughtSymbolAddRequest.SymbolQuantity,
-                SymbolPrice = userBoughtSymbolAddRequest.SymbolQuantity,
 
-                UserId = userBoughtSymbolAddRequest.UserId,
-                SymbolId = userBoughtSymbolAddRequest.SymbolId
-            };
-
-            User user = await _userSymbolPropertyRepository.AddNewBoughtSymbol(newUserSymbolPropertyToAdd);
-
-            return user;
         }
     }
 }
