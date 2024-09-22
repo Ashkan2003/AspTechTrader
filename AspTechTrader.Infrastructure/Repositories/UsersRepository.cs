@@ -1,5 +1,6 @@
 ﻿using AspTechTrader.Core.Domain.Entities;
 using AspTechTrader.Core.Domain.RepositoryContracts;
+using AspTechTrader.Core.DTO;
 using AspTechTrader.Infrastructure.AppDbContext;
 using Microsoft.EntityFrameworkCore;
 
@@ -74,37 +75,17 @@ namespace AspTechTrader.Infrastructure.Repositories
 
         }
 
+        public async Task<bool> UpdateUserProperty(UserPropertyUpdateRequestDTO userPropertyUpdateRequestDTO)
+        {
+            User? matchedUser = await _db.Users.FirstOrDefaultAsync(temp => temp.UserId == userPropertyUpdateRequestDTO.UserId);
 
-        //public async Task<User> AddSymbolToUserSymbolList(UserSymbol userSymbol)
-        //{
-        //    User? matchedUser = await _db.Users.Include(user => user.Symbols).FirstOrDefaultAsync(temp => temp.UserId == userSymbol.UserId);
-        //    Symbol? matchedSymbol = await _db.Symbols.FirstOrDefaultAsync(temp => temp.SymbolId == userSymbol.SymbolId);
+            matchedUser.UserProperty = userPropertyUpdateRequestDTO.UserProperty;
 
+            int count = await _db.SaveChangesAsync();
 
+            return count > 0 ? true : false;
+        }
 
-        //    if (matchedUser == null)
-        //    {
-        //        throw new Exception("no user finded with the given userId in AddSymbolToUserSymbolList-metod");
-        //    }
-        //    if (matchedSymbol == null)
-        //    {
-        //        throw new Exception("no symbol finded with the given userId in AddSymbolToUserSymbolList-metod");
-        //    }
-
-        //    // check for duplication of symbols in user-symbolList
-        //    var x = matchedUser.Symbols.FirstOrDefault(temp => temp.SymbolId == matchedSymbol.SymbolId);
-        //    if (x != null)
-        //    {
-        //        throw new Exception("this symbol is currently in userSymbolList");
-
-        //    }
-
-
-        //    matchedUser.Symbols.Add(matchedSymbol);
-        //    await _db.SaveChangesAsync();
-        //    return matchedUser;
-
-        //}
 
 
     }

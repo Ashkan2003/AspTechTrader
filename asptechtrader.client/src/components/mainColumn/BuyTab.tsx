@@ -3,36 +3,33 @@ import { TextField, Button, Typography } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import toast from "react-hot-toast";
 import { useBuySymbol } from "../../features/reactQueryUserSymbolProperty/useBuySymbol";
-import { SymbolType,  UserType, userWatchListsType } from "../../types/types";
+import { SymbolType,  UserType } from "../../types/types";
+import { useUpdateUserProperty } from "../../features/reactQueryUser/useUpdateUserProperty";
 
 interface Props {
-    currentSymbol: SymbolType;
-    userProperyWatchList: userWatchListsType;
-    currentBoughtSymbolQuantity: number;
-    currentBoughtSymbolId: string;
+  currentSymbol: SymbolType;
+  currentUser: UserType;
+  currentBoughtSymbolQuantity: number;
+  currentBoughtSymbolId: string;
   priceInputValue: number;
   volumeInputValue: number;
   todayDate: string;
-  //userCurrentBoughtSymbol: UserBoughtSymbol;
   setPriceInputValue: React.Dispatch<React.SetStateAction<number>>;
   setVolumeInputValue: React.Dispatch<React.SetStateAction<number>>;
-
-    currentUser: UserType;
   handleSetUserBoughtSymbolCountToVulomeInput: any;
   handleClose: any;
 }
 
 const BuyTab = ({
   currentSymbol,
-    currentBoughtSymbolQuantity,
-    currentBoughtSymbolId,
+  currentUser,
+  currentBoughtSymbolQuantity,
+  currentBoughtSymbolId,
   priceInputValue,
   volumeInputValue,
   todayDate,
-  //userCurrentBoughtSymbol,
   setPriceInputValue,
-    setVolumeInputValue,
-    currentUser,
+  setVolumeInputValue,
   handleClose,
   handleSetUserBoughtSymbolCountToVulomeInput,
 }: Props) => {
@@ -41,8 +38,7 @@ const BuyTab = ({
 
     //react-query // update
     const { mutate } = useBuySymbol();
-
-
+    const { updateUserPropertyMutation} = useUpdateUserProperty()
     //
     const userCurrentProperty = currentUser.userProperty;
 
@@ -88,8 +84,12 @@ const BuyTab = ({
       },
       {
         onSuccess: () => {
-          // when the update-mutate of the saling a symbol was successfull update the watch
-          
+              // when the update-mutate of the buying a symbol was successfull update the userProperty
+              updateUserPropertyMutation(
+                  {
+                      userId: currentUser.userId,
+                      userProperty: userNewProperty
+                  })
         },
       }
     );

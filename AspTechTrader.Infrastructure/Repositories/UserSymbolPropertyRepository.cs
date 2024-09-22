@@ -34,6 +34,18 @@ namespace AspTechTrader.Infrastructure.Repositories
 
         }
 
+        public async Task<bool> DeleteBoughtSymbol(Guid userSymbolPropertyId)
+        {
+            UserSymbolProperty? userSymbolProperty = await _db.UserSymbolProperties.FirstOrDefaultAsync(temp => temp.UserSymbolPropertyId == userSymbolPropertyId);
+
+            _db.UserSymbolProperties.Remove(userSymbolProperty);
+
+            var count = await _db.SaveChangesAsync();
+
+            return count > 0 ? true : false;
+
+        }
+
         public async Task<bool> UpdateUserSymbolProperty(UserSymbolPropertyUpdateRequestDTO userSymbolPropertyUpdateDTO)
         {
 

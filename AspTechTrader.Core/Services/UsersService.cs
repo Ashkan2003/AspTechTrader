@@ -136,9 +136,22 @@ namespace AspTechTrader.Core.Services
             return updatedUser;
         }
 
-        //public Task<User> AddSymbolToUserSymbolList(UserSymbol userSymbol)
-        //{
-        //    return _usersRepository.AddSymbolToUserSymbolList(userSymbol);
-        //}
+        public async Task<bool> UpdateUserProperty(UserPropertyUpdateRequestDTO userPropertyUpdateRequestDTO)
+        {
+
+
+            User? matchedUser = await GetUserById(userPropertyUpdateRequestDTO.UserId);
+
+            if (matchedUser == null)
+            {
+                throw new ArgumentException("no user founded with the given userId");
+            }
+
+            bool isSuccess = await _usersRepository.UpdateUserProperty(userPropertyUpdateRequestDTO);
+
+            return isSuccess;
+        }
+
+
     }
 }

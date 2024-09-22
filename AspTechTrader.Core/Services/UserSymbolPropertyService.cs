@@ -56,9 +56,9 @@ namespace AspTechTrader.Core.Services
                 int privioseBoughtSymbolQuantity = matchedUserSymbolProperty.SymbolQuantity;
 
                 //sum symbol-previose-quantity with  currentBoughtQuantity
-                matchedUserSymbolProperty.SymbolQuantity = privioseBoughtSymbolQuantity + userBoughtSymbolAddRequest.SymbolQuantity;
+                //matchedUserSymbolProperty.SymbolQuantity = privioseBoughtSymbolQuantity + userBoughtSymbolAddRequest.SymbolQuantity;
 
-                matchedUserSymbolProperty.SymbolPrice = userBoughtSymbolAddRequest.SymbolPrice;
+                //matchedUserSymbolProperty.SymbolPrice = userBoughtSymbolAddRequest.SymbolPrice;
 
                 UserSymbolPropertyUpdateRequestDTO userSymbolPropertyUpdateRequestDTO = new UserSymbolPropertyUpdateRequestDTO()
                 {
@@ -92,5 +92,69 @@ namespace AspTechTrader.Core.Services
 
 
         }
+
+        public async Task<bool> SaleSymbol(SymbolSaleRequestDTO symbolSaleRequestDTO)
+        {
+            User? matchedUser = await _usersRepository.GetUserById(symbolSaleRequestDTO.UserId);
+
+            Symbol? matchedSymbol = await _symbolsRepository.GetSymbolById(symbolSaleRequestDTO.SymbolId);
+
+            // check if the user exists with the given userId
+            if (matchedUser == null)
+            {
+                throw new ArgumentException("no user founded with the given userId");
+            }
+
+            // check if symbol existes with the given symbolId
+            if (matchedSymbol == null)
+            {
+                throw new ArgumentException("no symbol founded with the given SymbolId");
+            }
+
+            // check if the user bought this symbol previosly or not
+            UserSymbolProperty? matchedUserSymbolProperty = matchedUser.UserSymbolProperties.FirstOrDefault(temp => temp.SymbolId == symbolSaleRequestDTO.SymbolId);
+
+            if (matchedUserSymbolProperty == null)
+            {
+                throw new Exception("user dont have this symbol,so he cant sale it");
+            }
+
+            //check if user have enoght symbolQuantity to sale it
+            if (matchedUserSymbolProperty.SymbolQuantity < symbolSaleRequestDTO.SymbolSaleQuantity)
+            {
+                throw new Exception("user dont have enoght symbolQuantity to sale");
+            }
+
+            // if user have more symbolQuantity then saleSymbolQuantity so
+            // update the userSymbolProperty
+            if (matchedUserSymbolProperty.SymbolQuantity > symbolSaleRequestDTO.SymbolSaleQuantity)
+            {
+                int remainingSymbolQuantity = matchedUserSymbolProperty.SymbolQuantity - symbolSaleRequestDTO.SymbolSaleQuantity;
+
+                bool isSuccess = await _userSymbolPropertyRepository.UpdateUserSymbolProperty(new UserSymbolPropertyUpdateRequestDTO()
+                {
+                    SymbolPrice = symbolSaleRequestDTO.SymbolSalePrice,
+                    SymbolQuantity = remainingSymbolQuantity,
+
+                    UserSymbolPropertyId = matchedUserSymbolProperty.UserSymbolPropertyId
+                });
+
+                return isSuccess;
+            }
+
+            // if user have equal quantity // symbolQuantity == saleSymbolQuantity so
+            // so when we minez the user SymbolQuantity is 0  so delete userSymbolProperty
+            if (matchedUserSymbolProperty.SymbolQuantity == symbolSaleRequestDTO.SymbolSaleQuantity)
+            {
+                bool isSuccess = await _userSymbolPropertyRepository.DeleteBoughtSymbol(matchedUserSymbolProperty.UserSymbolPropertyId);
+
+                return isSuccess;
+            }
+
+            return false;
+
+        }
+
+
     }
 }

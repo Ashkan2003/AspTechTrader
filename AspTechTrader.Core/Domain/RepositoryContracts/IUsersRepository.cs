@@ -1,4 +1,5 @@
 ﻿using AspTechTrader.Core.Domain.Entities;
+using AspTechTrader.Core.DTO;
 
 namespace AspTechTrader.Core.Domain.RepositoryContracts
 {
@@ -38,6 +39,8 @@ namespace AspTechTrader.Core.Domain.RepositoryContracts
         /// <returns>true if deleted successfully</returns>
         Task<bool> DeleteUserById(Guid userId);
 
-        //Task<User> AddSymbolToUserSymbolList(UserSymbol userSymbol);
+
+        Task<bool> UpdateUserProperty(UserPropertyUpdateRequestDTO userPropertyUpdateRequestDTO);
+
     }
 }

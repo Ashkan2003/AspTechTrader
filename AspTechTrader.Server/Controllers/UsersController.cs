@@ -89,24 +89,28 @@ namespace AspTechTrader.Api.Controllers
             return Ok("user deleted successfully");
         }
 
+        [HttpPut("updateUserProperty")]
+        public async Task<ActionResult> UpdateUserProperty(UserPropertyUpdateRequestDTO userPropertyUpdateRequest)
+        {
+            if (userPropertyUpdateRequest == null)
+            {
+                return BadRequest("userPropertyUpdateRequest not supplied");
+            }
 
-        //[HttpPost("AddSymbolToUserSymbolList")]
-        //public async Task<ActionResult> AddSymbol(UserSymbol userSymbol)
-        //{
-        //    if (userSymbol == null)
-        //    {
-        //        return BadRequest("userSymbol object not supplied");
-        //    }
+            // validation
+            if (ModelState.IsValid == false)
+            {
+                string errorMessage = string.Join(" | ",
+                    ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage));
 
-        //    if (userSymbol.UserId == Guid.Empty && userSymbol.SymbolId == Guid.Empty)
-        //    {
-        //        return BadRequest("userId or symbolId not supplied");
-        //    }
+                return Problem(errorMessage);
+            }
 
-        //    User updatedUser = await _userService.AddSymbolToUserSymbolList(userSymbol);
+            bool isSuccess = await _userService.UpdateUserProperty(userPropertyUpdateRequest);
 
-        //    return Ok(updatedUser);
-
-        //}
+            return Ok(isSuccess);
+        }
     }
 }

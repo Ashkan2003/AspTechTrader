@@ -25,15 +25,7 @@ export type userWatchListsType = {
 
 }
 
-export type UserBoughtSymbol = {
-  id        : number,
-  symbolName : string,
-  count      : number,
 
-  //these fields are for making relating with the TradeAccount-model
-  //relatedTradeAccount TradeAccount @relation(fields: [tradeAccountId], references: [id])
-  //tradeAccountId      Int
-}
 
 export type UserType = {
     userId: string;

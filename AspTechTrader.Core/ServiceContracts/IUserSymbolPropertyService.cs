@@ -7,6 +7,7 @@ namespace AspTechTrader.Core.ServiceContracts
     {
         Task<User> AddNewBoughtSymbol(UserBoughtSymbolAddRequestDTO userBoughtSymbolAddRequest);
 
+        Task<bool> SaleSymbol(SymbolSaleRequestDTO symbolSaleRequestDTO);
 
     }
 }

@@ -124,8 +124,8 @@ export default function BuySaleTabList({
         <BuyTab
           currentSymbol={currentSymbol!}
           currentUser={currentUser!}
-                  currentBoughtSymbolQuantity={currentBoughtSymbolQuantity}
-                  currentBoughtSymbolId={currentBoughtSymbolId!}
+          currentBoughtSymbolQuantity={currentBoughtSymbolQuantity}
+          currentBoughtSymbolId={currentBoughtSymbolId!}
           priceInputValue={priceInputValue}
           volumeInputValue={volumeInputValue}
           todayDate={todayDate}
@@ -135,26 +135,23 @@ export default function BuySaleTabList({
           }
           setPriceInputValue={setPriceInputValue}
           setVolumeInputValue={setVolumeInputValue}
-
-       
         />
       </CustomTabPanel>
       <CustomTabPanel value={tabListIndexvalue} index={1}>
         <SaleTab
           currentSymbol={currentSymbol!}
-        //  userProperyWatchList={userProperyWatchList!}
-                  currentBoughtSymbolQuantity={currentBoughtSymbolQuantity}
+          currentUser={currentUser!}
+          currentBoughtSymbolQuantity={currentBoughtSymbolQuantity}
+          currentBoughtSymbolId={currentBoughtSymbolId!}
           priceInputValue={priceInputValue}
           volumeInputValue={volumeInputValue}
           todayDate={todayDate}
-          userCurrentBoughtSymbol={userCurrentBoughtSymbol!}
-          setPriceInputValue={setPriceInputValue}
-                  setVolumeInputValue={setVolumeInputValue}
-                  userTradeAccount={currentUser}
           handleClose={handleClose}
           handleSetUserBoughtSymbolCountToVulomeInput={
             handleSetUserBoughtSymbolCountToVulomeInput
           }
+          setPriceInputValue={setPriceInputValue}
+          setVolumeInputValue={setVolumeInputValue}
         />
       </CustomTabPanel>
     </Box>

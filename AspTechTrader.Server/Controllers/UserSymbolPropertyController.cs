@@ -10,12 +10,13 @@ namespace AspTechTrader.Api.Controllers
     public class UserSymbolPropertyController : ControllerBase
     {
         private readonly IUserSymbolPropertyService _userSymbolPropertyService;
+        private readonly IUserService _userService;
 
-
-        public UserSymbolPropertyController(IUserSymbolPropertyService userSymbolPropertyService)
+        public UserSymbolPropertyController(IUserSymbolPropertyService userSymbolPropertyService, IUserService userService)
         {
 
             _userSymbolPropertyService = userSymbolPropertyService;
+            _userService = userService;
         }
 
 
@@ -42,7 +43,46 @@ namespace AspTechTrader.Api.Controllers
 
         }
 
+        [HttpPut("SaleSymbol")]
+        public async Task<ActionResult> SaleSymbol(SymbolSaleRequestDTO symbolSaleRequestDTO)
+        {
+            if (symbolSaleRequestDTO == null)
+            {
+                return BadRequest("symbolSaleRequestDTO not supplied");
+            }
+            // validation
+            if (ModelState.IsValid == false)
+            {
+                string errorMessage = string.Join(" | ",
+                    ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage));
 
+                return Problem(errorMessage);
+            }
+
+            bool isSuccess = await _userSymbolPropertyService.SaleSymbol(symbolSaleRequestDTO);
+
+            if (isSuccess == false)
+            {
+                return Problem("cant sale symbol");
+            }
+            else
+            {
+                User? user = await _userService.GetUserById(symbolSaleRequestDTO.UserId);
+                int userNewProperty = user.UserProperty + (symbolSaleRequestDTO.SymbolSalePrice * symbolSaleRequestDTO.SymbolSaleQuantity);
+
+                bool isSuccessUpdateUserProperty = await _userService.UpdateUserProperty(new UserPropertyUpdateRequestDTO()
+                {
+                    UserId = symbolSaleRequestDTO.UserId,
+                    UserProperty = userNewProperty
+                });
+
+                return Ok(isSuccessUpdateUserProperty);
+            }
+
+
+        }
 
 
     }
