@@ -100,7 +100,7 @@ export default function SymbolPieChart({ demandVolume, offerVolume }: Props) {
   return (
     <div className="h-96">
       <ResponsiveContainer width="100%" height="100%">
-        <PieChart width={400} height={300}>
+        <PieChart width={400} height={200}>
           <Pie
             activeIndex={state}
             activeShape={renderActiveShape}

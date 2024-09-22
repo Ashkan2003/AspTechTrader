@@ -1,34 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import { useSymbols } from "../../features/reactQuerySymbols/useSymbols";
 import { Skeleton, Stack } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../GlobalRedux/store";
 import { updateMainSearchBarSymbol } from "../../GlobalRedux/Features/tableSymbols/tableSymbols-slice";
+import { useSymbols } from "../../features/reactQuerySymbols/useSymbols";
 
 export default function AutoCompleteBox() {
-    //const { isLoading, dataBaseSybmols } = useSymbols();
-
-    const isLoading = false
-    const dataBaseSybmols = [{
-        id: 1,
-        symbolName: 1,
-        volume: 1,
-        lastDeal: 1,
-        lastDealPercentage: 1,
-        lastPrice: 1,
-        lastPricePercentage: 1,
-        theFirst: 1,
-        theLeast: 1,
-        theMost: 1,
-        demandVolume: 1,
-        demandPrice: 1,
-        offerPrice: 1,
-        offerVolume: 1,
-        state: 1,
-        chartNumber: 1,
-    }]
-
+  const { dataBaseSybmols, isLoading } = useSymbols()
   const dispatch = useDispatch<AppDispatch>();
 
   if (isLoading)

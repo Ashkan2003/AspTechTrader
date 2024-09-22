@@ -84,9 +84,9 @@ export default function UserWatchList({currentUser }:Props) {
             width: "100%",
             maxWidth: 360,
             bgcolor: "ternery.main",
-            position: "relative",
-            overflow: "auto",
-            maxHeight: 150,
+              position: "relative",
+              maxHeight: 150,
+              overflowY: "auto",
             // "& ul": { padding: 0 },
           }}
               >
