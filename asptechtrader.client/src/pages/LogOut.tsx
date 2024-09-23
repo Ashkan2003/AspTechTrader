@@ -7,6 +7,7 @@ function LogOut() {
     function handleLogOut() {
         console.log("logout...")
         localStorage.removeItem("token")
+        localStorage.removeItem("refreshToken")
         navigate("/Login")
     }
 

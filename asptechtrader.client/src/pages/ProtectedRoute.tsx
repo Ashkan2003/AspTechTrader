@@ -8,13 +8,15 @@ import { useGetCurrentUser } from "../features/reactQueryUser/useGetCurrentUser"
 // its like a middelware
 function ProtectedRoute() {
     const navigate = useNavigate();
+   
     const { currentUser, isLoadingUser, isSuccess,error } = useGetCurrentUser()
-    
+
 
     useEffect(() => {
         if (currentUser == null && !isLoadingUser) {
             navigate("/Login")
         }
+        
     }, [currentUser, isLoadingUser, navigate])
 
     if (isLoadingUser) {
@@ -26,7 +28,7 @@ function ProtectedRoute() {
     }
 
     if (currentUser) {
-        //navigate("/")
+        // if currentUser exist then render childeren of the protected-route so Home-page
         return <Outlet/>
     }
   

@@ -9,9 +9,9 @@ export const useGetCurrentUser = () => {
 
     const token = localStorage.getItem("token")
 
-    if (!token) {
-        navigate("/Login")
-    }
+    //if (!token) {
+    //    //navigate("/Login")
+    //}
 
     const {
         data: currentUser,
@@ -24,7 +24,9 @@ export const useGetCurrentUser = () => {
             method: "get",
             url: `https://localhost:7007/api/Account/GetCurrentLoggedInUser?Token=${token}`,
         }).then(res => res.data)
-       
+        , enabled: () => {
+            return token ? true : false
+        }
     });
     return { currentUser, isLoadingUser, error, isSuccess };
 };

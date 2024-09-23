@@ -23,14 +23,14 @@ import { Link, useNavigate } from "react-router-dom";
 
 interface FormData {
     name: string;
-    lastName: string;
+    phoneNumber: number;
     email: string;
     password: string;
 }
 
 const schema = z.object({
     name: z.string().min(3, { message: "حداقل کاراکتر برای نام رعایت نشده." }),
-    lastName: z
+    phoneNumber: z
         .string()
         .min(3, { message: "حداقل کاراکتر برای نام خانوادگی رعایت نشده" }),
     email: z.string().email({ message: "فرمت ایمیل باید درست باشد." }),
@@ -63,7 +63,7 @@ function Register() {
                     personName: data.name,
                     email: data.email,
                     password: data.password,
-                    phoneNumber: "9243243423",
+                    phoneNumber: data.phoneNumber,
                 },
             });
             // if success return this
@@ -75,6 +75,8 @@ function Register() {
                 localStorage.setItem("token", res.data.token)
                 // store the refreshToken
                 localStorage.setItem("refreshToken", res.data.refreshToken)
+                // store refreshTokenExpirationDateTime
+                localStorage.setItem("refreshTokenExpirationDateTime", res.data.refreshTokenExpirationDateTime)
 
                 toast.success("ثبت نام با موفقیت انجام شد.");
             }
@@ -123,13 +125,13 @@ function Register() {
                               color="info"
                               required
                               fullWidth
-                              id="lastName"
-                              label="نام خانوادگی"
-                              autoComplete="family-name"
-                              {...register("lastName")}
+                              id="phoneNumber"
+                              label="شماره تلفن"
+                              autoComplete="phone-number"
+                              {...register("phoneNumber")}
                           />
-                          {errors.lastName?.message && (
-                              <Typography color="red">{errors.lastName?.message}</Typography>
+                          {errors.phoneNumber?.message && (
+                              <Typography color="red">{errors.phoneNumber?.message}</Typography>
                           )}
                       </Grid>
                       <Grid item xs={12}>

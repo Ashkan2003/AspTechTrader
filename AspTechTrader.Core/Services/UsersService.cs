@@ -48,27 +48,6 @@ namespace AspTechTrader.Core.Services
             return matchedUser;
         }
 
-
-        public async Task<bool> DeleteUserById(Guid? userId)
-        {
-            if (userId == Guid.Empty)
-            {
-                throw new ArgumentNullException(nameof(userId));
-            }
-
-            User? user = await _usersRepository.GetUserById(userId.Value);
-
-            if (user == null)
-            {
-                return false;
-            }
-
-            await _usersRepository.DeleteUserById(userId.Value);
-
-            return true;
-
-        }
-
         public async Task<User> AddUser(UserAddRequestDTO? userAddRequest)
         {
             // chech in the userAddRequest in not null
@@ -94,7 +73,7 @@ namespace AspTechTrader.Core.Services
                 UserId = Guid.NewGuid(),
                 EmailAddress = userAddRequest.EmailAddress,
                 UserName = userAddRequest.UserName,
-                UserProperty = 0
+                UserProperty = 20000
             };
 
 
@@ -103,6 +82,43 @@ namespace AspTechTrader.Core.Services
             return AddedUser;
         }
 
+        public async Task<bool> UpdateUserProperty(UserPropertyUpdateRequestDTO userPropertyUpdateRequestDTO)
+        {
+
+
+            User? matchedUser = await GetUserById(userPropertyUpdateRequestDTO.UserId);
+
+            if (matchedUser == null)
+            {
+                throw new ArgumentException("no user founded with the given userId");
+            }
+
+            bool isSuccess = await _usersRepository.UpdateUserProperty(userPropertyUpdateRequestDTO);
+
+            return isSuccess;
+        }
+
+
+        // these methods arent used
+        public async Task<bool> DeleteUserById(Guid? userId)
+        {
+            if (userId == Guid.Empty)
+            {
+                throw new ArgumentNullException(nameof(userId));
+            }
+
+            User? user = await _usersRepository.GetUserById(userId.Value);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            await _usersRepository.DeleteUserById(userId.Value);
+
+            return true;
+
+        }
         public async Task<User> UpdateUser(UserUpdateRequestDTO? userUpdateRequest)
         {
 
@@ -136,22 +152,7 @@ namespace AspTechTrader.Core.Services
             return updatedUser;
         }
 
-        public async Task<bool> UpdateUserProperty(UserPropertyUpdateRequestDTO userPropertyUpdateRequestDTO)
-        {
-
-
-            User? matchedUser = await GetUserById(userPropertyUpdateRequestDTO.UserId);
-
-            if (matchedUser == null)
-            {
-                throw new ArgumentException("no user founded with the given userId");
-            }
-
-            bool isSuccess = await _usersRepository.UpdateUserProperty(userPropertyUpdateRequestDTO);
-
-            return isSuccess;
-        }
-
+      
 
     }
 }
