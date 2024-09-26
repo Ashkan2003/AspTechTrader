@@ -14,8 +14,9 @@ export const useSymbols = () => {
           method: "get",
           url: "https://localhost:7007/api/Symbols/getSymbols",
           headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`
-          }
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          },
+          
       }).then(res => res.data)
        
   });

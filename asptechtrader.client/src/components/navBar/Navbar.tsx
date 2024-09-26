@@ -10,10 +10,10 @@ import UserProperty from "./UserProperty";
 import NavAuthState from "./NavAuthState";
 import axios from "axios";
 export default function Navbar() {
-
+  
     async function handleClick() {
         console.log("refresh")
-        const token = localStorage.getItem("token")
+        const token = localStorage.getItem("accessToken")
         const refreshToken = localStorage.getItem("refreshToken")
 
         const res = await axios({
@@ -27,9 +27,9 @@ export default function Navbar() {
 
         if (res.status == 200) {
             console.log("succssess refresh")
-            localStorage.setItem("token", res.data.token)
+            localStorage.setItem("accessToken", res.data.accessToken)
+            localStorage.setItem("accessTokenExpirationTime", res.data.accessTokenExpirationTime)
             localStorage.setItem("refreshToken", res.data.refreshToken)
-
         }
         else {
             console.log("errorr refresh")

@@ -6,18 +6,22 @@ import { useGetCurrentUser } from "../features/reactQueryUser/useGetCurrentUser"
 
 // this is a tsx file with logic of Authenticating user when first entered the app
 // its like a middelware
+
 function ProtectedRoute() {
+     
     const navigate = useNavigate();
    
-    const { currentUser, isLoadingUser, isSuccess,error } = useGetCurrentUser()
-
+    const { currentUser, isLoadingUser, isSuccess, error } = useGetCurrentUser()
 
     useEffect(() => {
         if (currentUser == null && !isLoadingUser) {
             navigate("/Login")
         }
-        
+
     }, [currentUser, isLoadingUser, navigate])
+
+
+   
 
     if (isLoadingUser) {
         return (

@@ -7,7 +7,7 @@ import { UserType } from "../../types/types";
 export const useGetCurrentUser = () => {
     const navigate = useNavigate();
 
-    const token = localStorage.getItem("token")
+    const accesstToken = localStorage.getItem("accessToken")
 
     //if (!token) {
     //    //navigate("/Login")
@@ -22,11 +22,12 @@ export const useGetCurrentUser = () => {
         queryKey: ["current-user"], // the queryKey is a unic key to identify the data in the cash
         queryFn: async () => await axios({
             method: "get",
-            url: `https://localhost:7007/api/Account/GetCurrentLoggedInUser?Token=${token}`,
-        }).then(res => res.data)
-        , enabled: () => {
-            return token ? true : false
-        }
+            url: `https://localhost:7007/api/Account/GetCurrentLoggedInUser?Token=${accesstToken}`,
+        }).then(res => res.data),
+        enabled: () => {
+            return accesstToken ? true : false
+        },
+        
     });
     return { currentUser, isLoadingUser, error, isSuccess };
 };

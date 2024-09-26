@@ -1,6 +1,7 @@
 ﻿using AspTechTrader.Core.Domain.Entities;
 using AspTechTrader.Core.Domain.IdentityEntities;
 using AspTechTrader.Core.DTO;
+using AspTechTrader.Core.Enums;
 using AspTechTrader.Core.ServiceContracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -66,13 +67,60 @@ namespace AspTechTrader.Api.Controllers
                 //sign in
                 await _signInManager.SignInAsync(user, isPersistent: false);
 
+
+                // check for userRole
+                // if userRole is "Admin"
+                if (registerDTO.UserRole == UserRoleOptions.Admin)
+                {
+                    // create admin-role
+                    if (await _roleManager.FindByNameAsync(UserRoleOptions.Admin.ToString()) is null)
+                    {
+                        // if the admin-row was not created in AspNetRoles-table so create it
+                        ApplicationRole applicationRole = new ApplicationRole()
+                        {
+                            Name = UserRoleOptions.Admin.ToString()
+                        };
+                        await _roleManager.CreateAsync(applicationRole);
+                    }
+                    // Add the new user into AspNetUserRole-table
+                    // with this code we are relating the current-user with current selected user-role
+                    await _userManager.AddToRoleAsync(user, UserRoleOptions.Admin.ToString());
+                }
+                // if userRole is "user"
+                else if (registerDTO.UserRole == UserRoleOptions.User)
+                {
+                    // create user-role
+                    if (await _roleManager.FindByNameAsync(UserRoleOptions.User.ToString()) is null)
+                    {
+                        // if the user-role was not created in AspNetRoles-table so create it
+                        ApplicationRole applicationRole = new ApplicationRole()
+                        {
+                            Name = UserRoleOptions.User.ToString()
+                        };
+                        await _roleManager.CreateAsync(applicationRole);
+                    }
+                    // Add the new user into AspNetUserRole-table
+                    // with this code we are relating the current-user with current selected user-role
+                    await _userManager.AddToRoleAsync(user, UserRoleOptions.User.ToString());
+                }
+                else
+                {
+                    return BadRequest("the user-role was not suppliyed");
+                }
+
+
+                //
+                var roles = await _userManager.GetRolesAsync(user);
+
                 // create a new jwt-token fo the registered user
-                AuthenticationResponseDTO authenticationRespose = _jwtService.CreateJwtToken(user);
+                AuthenticationResponseDTO authenticationRespose = _jwtService.CreateJwtToken(user, roles);
 
                 // save the newly genereted-refresh-token in the asp-user-db
                 user.RefreshToken = authenticationRespose.RefreshToken;
                 user.RefreshTokenExpirationDateTime = authenticationRespose.RefreshTokenExpirationDateTime;
                 await _userManager.UpdateAsync(user);
+
+                
 
                 // create user // this is the main user of application and important
                 // this user is diffrent from identity-user
@@ -128,8 +176,11 @@ namespace AspTechTrader.Api.Controllers
                 //sign in
                 await _signInManager.SignInAsync(user, isPersistent: false);
 
+                //
+                var roles = await _userManager.GetRolesAsync(user);
+
                 // create a new jwt-token fo the logedd in user
-                AuthenticationResponseDTO authenticationRespose = _jwtService.CreateJwtToken(user);
+                AuthenticationResponseDTO authenticationRespose = _jwtService.CreateJwtToken(user, roles);
 
                 // save the newly genereted-refresh-token in the asp-user-db
                 user.RefreshToken = authenticationRespose.RefreshToken;
@@ -183,7 +234,10 @@ namespace AspTechTrader.Api.Controllers
                 return BadRequest("invalid refreshToken");
             }
 
-            AuthenticationResponseDTO authenticationResponseDTO = _jwtService.CreateJwtToken(user);
+            //
+            var roles = await _userManager.GetRolesAsync(user);
+
+            AuthenticationResponseDTO authenticationResponseDTO = _jwtService.CreateJwtToken(user, roles);
 
             user.RefreshToken = authenticationResponseDTO.RefreshToken;
             user.RefreshTokenExpirationDateTime = authenticationResponseDTO.RefreshTokenExpirationDateTime;

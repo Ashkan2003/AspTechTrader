@@ -9,6 +9,6 @@ namespace AspTechTrader.Core.Domain.IdentityEntities
 {
     public class ApplicationRole : IdentityRole<Guid>
     {
-
+       
     }
 }

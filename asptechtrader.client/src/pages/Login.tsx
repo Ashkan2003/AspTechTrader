@@ -64,11 +64,10 @@ function Login() {
                 setLoading(false);
 
                 // store the newly generated jwt-token in localStorage
-                localStorage.setItem("token", res.data.token)
+                localStorage.setItem("accessToken", res.data.accessToken)
+                localStorage.setItem("accessTokenExpirationTime", res.data.accessTokenExpirationTime)
                 // store the refreshToken
                 localStorage.setItem("refreshToken", res.data.refreshToken)
-                // store refreshTokenExpirationDateTime
-                localStorage.setItem("refreshTokenExpirationDateTime", res.data.refreshTokenExpirationDateTime)
 
                 toast.success("ورود با موفقیت انجام شد.");
             }

@@ -3,6 +3,7 @@ using AspTechTrader.Core.DTO;
 using AspTechTrader.Core.ServiceContracts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -27,7 +28,7 @@ namespace AspTechTrader.Core.Services
         /// </summary>
         /// <param name="user">ApplicationUser object</param>
         /// <returns>AuthenticationResponse that includes token</returns>
-        public AuthenticationResponseDTO CreateJwtToken(ApplicationUser applicationUser)
+        public AuthenticationResponseDTO CreateJwtToken(ApplicationUser applicationUser, IList<string> roles)
         {
             // get the expiration-minote like (10minite) and convert it to dateTime in futer // eg = 2024/3/1 + 10minote = the expration-date
             DateTime expiration = DateTime.UtcNow.AddMinutes(
@@ -35,12 +36,13 @@ namespace AspTechTrader.Core.Services
 
             // the jwt-peyload
             // Create an array of Claim objects representing the user's claims, such as their ID, name, email, etc.
-            Claim[] claims = new Claim[] {
+            var claims = new List<Claim>{
                 new Claim(JwtRegisteredClaimNames.Sub,applicationUser.Id.ToString()), // Subject (user id)
 
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()), // Jwt unique ID
                 
                 new Claim(ClaimTypes.Email,applicationUser.Email),
+
 
                 // this code created a bug //motherFucker
                 //new Claim(JwtRegisteredClaimNames.Iat,DateTime.UtcNow.ToString()), // Issued at (date and time of the token generation
@@ -51,8 +53,13 @@ namespace AspTechTrader.Core.Services
 
                 ////// optional
                 //new Claim(ClaimTypes.NameIdentifier,applicationUser.PersonName), // uniqu name identifire of user (PersonNAme)
-       
+
             };
+
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             // Create a SymmetricSecurityKey object using the key specified in the configuration.// get the sucret key
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(
@@ -82,8 +89,8 @@ namespace AspTechTrader.Core.Services
             // return the response with newly generated jwt-token based on the given information
             return new AuthenticationResponseDTO()
             {
-                Token = token,
-                Expiration = expiration,
+                AccessToken = token,
+                AccessTokenExpirationTime = expiration,
                 Email = applicationUser.Email,
                 PersonName = applicationUser.PersonName,
                 RefreshToken = GenerateRefreshToken(),

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AspTechTrader.Core.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace AspTechTrader.Core.DTO
 {
@@ -16,5 +17,7 @@ namespace AspTechTrader.Core.DTO
 
         [Required(ErrorMessage = "password cant be blank")]
         public string Password { get; set; } = string.Empty;
+
+        public UserRoleOptions UserRole { get; set; } = UserRoleOptions.User;
     }
 }

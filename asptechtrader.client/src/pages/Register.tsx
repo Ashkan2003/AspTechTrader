@@ -13,6 +13,10 @@ import {
     Button,
     Typography,
     CircularProgress,
+    FormControl,
+    FormLabel,
+    Radio,
+    RadioGroup,
 } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
@@ -26,6 +30,7 @@ interface FormData {
     phoneNumber: number;
     email: string;
     password: string;
+    userRole : "User"| "Admin"
 }
 
 const schema = z.object({
@@ -37,6 +42,7 @@ const schema = z.object({
     password: z
         .string()
         .min(8, { message: "حداقل رمز عبور باید 8 کاراکتر باشد." }),
+    userRole: z.enum(["User","Admin"])
 });
 
 function Register() {
@@ -49,12 +55,17 @@ function Register() {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<FormData>({ resolver: zodResolver(schema) });
+    } = useForm<FormData>({
+        resolver: zodResolver(schema),
+        defaultValues: {
+            userRole: "User"
+        }
+    });
 
     // when the user click on the submit-btn then send these information to the db
     const onSubmit: SubmitHandler<FormData> = async (data) => {
         setLoading(true);
-
+        console.log(data,'llll')
         try {
             const res = await axios({
                 method: "post",
@@ -64,6 +75,7 @@ function Register() {
                     email: data.email,
                     password: data.password,
                     phoneNumber: data.phoneNumber,
+                    userRole: data.userRole == "User" ? 0 : 1 // in .netCore enum types have numbers from 0 to up // i cant fix this 
                 },
             });
             // if success return this
@@ -72,11 +84,10 @@ function Register() {
                 navigate("/")
 
                 // store the newly generated jwt-token in localStorage
-                localStorage.setItem("token", res.data.token)
+                localStorage.setItem("accessToken", res.data.accessToken)
+                localStorage.setItem("accessTokenExpirationTime", res.data.accessTokenExpirationTime)
                 // store the refreshToken
                 localStorage.setItem("refreshToken", res.data.refreshToken)
-                // store refreshTokenExpirationDateTime
-                localStorage.setItem("refreshTokenExpirationDateTime", res.data.refreshTokenExpirationDateTime)
 
                 toast.success("ثبت نام با موفقیت انجام شد.");
             }
@@ -164,10 +175,15 @@ function Register() {
                           )}
                       </Grid>
                       <Grid item xs={12}>
-                          <FormControlLabel
-                              control={<Checkbox value="allowExtraEmails" color="info" />}
-                              label="دریافت ایمیل از تک تریدر"
-                          />
+                          <FormControl>
+                              <FormLabel id="demo-row-radio-buttons-group-label"> نوع کاربر</FormLabel>
+                              <RadioGroup
+                                  row
+                              >
+                                  <FormControlLabel value="User" control={<Radio{...register("userRole")}/>} label="کاربر معمولی" />
+                                  <FormControlLabel value="Admin" control={<Radio{...register("userRole")}/>} label="ادمین" />
+                              </RadioGroup>
+                          </FormControl>
                       </Grid>
                   </Grid>
                   <Button

@@ -6,7 +6,7 @@ namespace AspTechTrader.Core.ServiceContracts
 {
     public interface IJwtService
     {
-        AuthenticationResponseDTO CreateJwtToken(ApplicationUser applicationUser);
+        AuthenticationResponseDTO CreateJwtToken(ApplicationUser applicationUser, IList<string> roles);
 
         ClaimsPrincipal? GetPrincipalFormJwtToken(string? token);
     }

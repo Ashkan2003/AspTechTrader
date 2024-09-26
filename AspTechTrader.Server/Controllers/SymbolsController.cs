@@ -22,7 +22,8 @@ namespace AspTechTrader.Api.Controllers
         }
 
 
-        [Authorize]
+        //[Authorize(Roles = "User")]
+        [Authorize(Roles ="Admin")]
         [HttpGet("getSymbols")] // https://localhost:7007/api/Symbols/getSymbols
         public async Task<ActionResult<List<Symbol>>> GetAllSymbols()
         {

@@ -94,6 +94,7 @@ namespace AspTechTrader.Api
                 // set the default authentication-schema to jwt
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                
             })
                 // when the user make a http-request with jwt-token in header , with this code we validate and give the permishion to get the data or post the data
                 .AddJwtBearer(options =>
@@ -145,7 +146,7 @@ namespace AspTechTrader.Api
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            
 
             app.MapControllers();
 
