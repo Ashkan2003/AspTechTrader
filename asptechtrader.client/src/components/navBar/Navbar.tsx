@@ -9,8 +9,14 @@ import NavClock from "./NavClock";
 import UserProperty from "./UserProperty";
 import NavAuthState from "./NavAuthState";
 import axios from "axios";
+import { useGetCurrentUser } from "../../features/reactQueryUser/useGetCurrentUser";
+import { Link } from "react-router-dom";
 export default function Navbar() {
-  
+
+    const { currentUser, isLoadingUser } = useGetCurrentUser()
+
+    if (isLoadingUser) return null
+
     async function handleClick() {
         console.log("refresh")
         const token = localStorage.getItem("accessToken")
@@ -44,9 +50,19 @@ export default function Navbar() {
             <div className="flex items-center   pe-3 ">          
             <img src="/Trade-brand.png" alt="brand" width="50" height="30" />
             <Menu />
-            <Typography className="hidden md:block" color="white">
-              منو-دیده بان کلاسیک
-            </Typography>
+            {
+             currentUser?.userRole == 1 ? 
+                <Link to="/AdminPage">
+                  <Typography className="hidden md:block" color="white">
+                     داشبورد ادمین
+                   </Typography>
+
+                 </Link>
+                :
+                 <Typography className="hidden md:block" color="white">
+                     منو-دیده بان کلاسیک
+                 </Typography>
+            }             
           </div>
           <Divider
             className="hidden sm:block"

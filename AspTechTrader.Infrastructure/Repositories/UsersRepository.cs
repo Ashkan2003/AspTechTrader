@@ -86,7 +86,15 @@ namespace AspTechTrader.Infrastructure.Repositories
             return count > 0 ? true : false;
         }
 
-
-
+        public async Task<List<User>> GetAllUsers()
+        {
+            List<User> allUsers = await _db.Users
+                     .Include(user => user.UserSymbolProperties)
+                     .ThenInclude(userSymbolProperty => userSymbolProperty.Symbol)
+                     .Include(user => user.UserWatchLists)
+                     .ThenInclude(userWatchList => userWatchList.Symbols)
+                     .ToListAsync();
+            return allUsers;
+        }
     }
 }

@@ -18,6 +18,6 @@ namespace AspTechTrader.Core.DTO
         [Required(ErrorMessage = "password cant be blank")]
         public string Password { get; set; } = string.Empty;
 
-        public UserRoleOptions UserRole { get; set; } = UserRoleOptions.User;
+        public UserRoleOptions UserRole { get; set; } = UserRoleOptions.RegularUser;
     }
 }

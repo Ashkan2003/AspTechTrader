@@ -9,7 +9,6 @@ import {
     Grid,
     TextField,
     FormControlLabel,
-    Checkbox,
     Button,
     Typography,
     CircularProgress,
@@ -30,7 +29,7 @@ interface FormData {
     phoneNumber: number;
     email: string;
     password: string;
-    userRole : "User"| "Admin"
+    userRole: "RegularUser"| "Admin"
 }
 
 const schema = z.object({
@@ -42,7 +41,7 @@ const schema = z.object({
     password: z
         .string()
         .min(8, { message: "حداقل رمز عبور باید 8 کاراکتر باشد." }),
-    userRole: z.enum(["User","Admin"])
+    userRole: z.enum(["RegularUser","Admin"])
 });
 
 function Register() {
@@ -58,7 +57,7 @@ function Register() {
     } = useForm<FormData>({
         resolver: zodResolver(schema),
         defaultValues: {
-            userRole: "User"
+            userRole: "RegularUser"
         }
     });
 
@@ -75,7 +74,7 @@ function Register() {
                     email: data.email,
                     password: data.password,
                     phoneNumber: data.phoneNumber,
-                    userRole: data.userRole == "User" ? 0 : 1 // in .netCore enum types have numbers from 0 to up // i cant fix this 
+                    userRole: data.userRole == "RegularUser" ? 0 : 1 // in .netCore enum types have numbers from 0 to up // i cant fix this 
                 },
             });
             // if success return this
@@ -180,7 +179,7 @@ function Register() {
                               <RadioGroup
                                   row
                               >
-                                  <FormControlLabel value="User" control={<Radio{...register("userRole")}/>} label="کاربر معمولی" />
+                                  <FormControlLabel value="RegularUser" control={<Radio{...register("userRole")}/>} label="کاربر معمولی" />
                                   <FormControlLabel value="Admin" control={<Radio{...register("userRole")}/>} label="ادمین" />
                               </RadioGroup>
                           </FormControl>

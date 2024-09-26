@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AspTechTrader.Core.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace AspTechTrader.Core.DTO
 {
@@ -11,6 +12,9 @@ namespace AspTechTrader.Core.DTO
         [EmailAddress(ErrorMessage = "EmailAddress should be a valid email")]
         [DataType(DataType.EmailAddress)]
         public string EmailAddress { get; set; }
+
+        [Required(ErrorMessage = "UserRole cant be blank")]
+        public UserRoleOptions UserRole { get; set; }
 
 
 

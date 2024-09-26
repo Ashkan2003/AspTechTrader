@@ -42,5 +42,8 @@ namespace AspTechTrader.Core.Domain.RepositoryContracts
 
         Task<bool> UpdateUserProperty(UserPropertyUpdateRequestDTO userPropertyUpdateRequestDTO);
 
+        Task<List<User>> GetAllUsers();
+
+
     }
 }

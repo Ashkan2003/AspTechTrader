@@ -10,6 +10,7 @@ import Register from './pages/Register.tsx';
 import LogOut from './pages/LogOut.tsx';
 import ProtectedRoute from './pages/ProtectedRoute.tsx';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import AdminPage from './pages/AdminPage.tsx';
 
 
 
@@ -32,6 +33,10 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
         {
             path: "/LogOut",
             element: <LogOut/>
+        },
+        {
+            path: "/AdminPage",
+            element: <AdminPage/>
         }
     ]);
 

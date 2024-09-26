@@ -3,6 +3,7 @@ using AspTechTrader.Core.Domain.RepositoryContracts;
 using AspTechTrader.Core.DTO;
 using AspTechTrader.Core.Helpers;
 using AspTechTrader.Core.ServiceContracts;
+
 namespace AspTechTrader.Core.Services
 {
     public class UsersService : IUserService
@@ -73,7 +74,8 @@ namespace AspTechTrader.Core.Services
                 UserId = Guid.NewGuid(),
                 EmailAddress = userAddRequest.EmailAddress,
                 UserName = userAddRequest.UserName,
-                UserProperty = 20000
+                UserProperty = 40000,
+                UserRole = userAddRequest.UserRole,
             };
 
 
@@ -98,6 +100,12 @@ namespace AspTechTrader.Core.Services
             return isSuccess;
         }
 
+        public async Task<List<User>> GetAllUsers()
+        {
+            List<User> allUsers = await _usersRepository.GetAllUsers();
+
+            return allUsers;
+        }
 
         // these methods arent used
         public async Task<bool> DeleteUserById(Guid? userId)
@@ -152,7 +160,6 @@ namespace AspTechTrader.Core.Services
             return updatedUser;
         }
 
-      
 
     }
 }

@@ -2,7 +2,7 @@
 {
     public enum UserRoleOptions
     {
-        User, 
+        RegularUser, 
         Admin,
     }
 }

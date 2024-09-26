@@ -86,22 +86,22 @@ namespace AspTechTrader.Api.Controllers
                     // with this code we are relating the current-user with current selected user-role
                     await _userManager.AddToRoleAsync(user, UserRoleOptions.Admin.ToString());
                 }
-                // if userRole is "user"
-                else if (registerDTO.UserRole == UserRoleOptions.User)
+                // if userRole is "regularUser"
+                else if (registerDTO.UserRole == UserRoleOptions.RegularUser)
                 {
                     // create user-role
-                    if (await _roleManager.FindByNameAsync(UserRoleOptions.User.ToString()) is null)
+                    if (await _roleManager.FindByNameAsync(UserRoleOptions.RegularUser.ToString()) is null)
                     {
                         // if the user-role was not created in AspNetRoles-table so create it
                         ApplicationRole applicationRole = new ApplicationRole()
                         {
-                            Name = UserRoleOptions.User.ToString()
+                            Name = UserRoleOptions.RegularUser.ToString()
                         };
                         await _roleManager.CreateAsync(applicationRole);
                     }
                     // Add the new user into AspNetUserRole-table
                     // with this code we are relating the current-user with current selected user-role
-                    await _userManager.AddToRoleAsync(user, UserRoleOptions.User.ToString());
+                    await _userManager.AddToRoleAsync(user, UserRoleOptions.RegularUser.ToString());
                 }
                 else
                 {
@@ -120,7 +120,7 @@ namespace AspTechTrader.Api.Controllers
                 user.RefreshTokenExpirationDateTime = authenticationRespose.RefreshTokenExpirationDateTime;
                 await _userManager.UpdateAsync(user);
 
-                
+
 
                 // create user // this is the main user of application and important
                 // this user is diffrent from identity-user
@@ -128,6 +128,7 @@ namespace AspTechTrader.Api.Controllers
                 {
                     UserName = registerDTO.PersonName,
                     EmailAddress = registerDTO.Email,
+                    UserRole = registerDTO.UserRole,
                 });
 
                 return Ok(authenticationRespose);

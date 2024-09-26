@@ -112,5 +112,20 @@ namespace AspTechTrader.Api.Controllers
 
             return Ok(isSuccess);
         }
+
+        [HttpGet("getAllUsers")]
+        public async Task<ActionResult> GetAllUsers()
+        {
+            List<User> allUsers = await _userService.GetAllUsers();
+
+            if (allUsers == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(allUsers);
+        }
+
     }
+
 }

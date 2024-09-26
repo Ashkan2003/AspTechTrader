@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AspTechTrader.Core.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace AspTechTrader.Core.Domain.Entities
 {
@@ -17,6 +18,7 @@ namespace AspTechTrader.Core.Domain.Entities
 
         public int UserProperty { get; set; }
 
+        public UserRoleOptions UserRole { get; set; } = UserRoleOptions.RegularUser;
 
         //relation one to many with userSymbolProperty
         public ICollection<UserSymbolProperty> UserSymbolProperties { get; set; }
@@ -24,7 +26,7 @@ namespace AspTechTrader.Core.Domain.Entities
         // relation one to many with userWatchList
         public ICollection<UserWatchList> UserWatchLists { get; set; } = new List<UserWatchList>();
 
-    
+
 
 
 

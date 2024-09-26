@@ -34,6 +34,7 @@ export type UserType = {
     userProperty: number;
     userSymbolProperties: UserSymbolProperties[];
     userWatchList: userWatchListsType;
+    userRole : 0 | 1
 
 }
 
