@@ -24,7 +24,6 @@ const NavAuthState = () => {
       </div>
     );
 
-    console.log(currentUser,"sa")
 
   // this is for the menu-component
   const open = Boolean(anchorEl);

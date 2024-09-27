@@ -33,7 +33,7 @@ export type UserType = {
     emailAddress: string;
     userProperty: number;
     userSymbolProperties: UserSymbolProperties[];
-    userWatchList: userWatchListsType;
+    userWatchLists: userWatchListsType[];
     userRole : 0 | 1
 
 }

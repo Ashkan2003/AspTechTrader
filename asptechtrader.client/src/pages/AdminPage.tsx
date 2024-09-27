@@ -1,59 +1,50 @@
 ﻿import { Box, Divider, Paper, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
 import { useGetCurrentUser } from "../features/reactQueryUser/useGetCurrentUser";
 import AdminMainTable from "../components/adminTable/AdminMainTable";
+import Navbar from "../components/navBar/Navbar";
+import AdminSelectedUserSymbol from "../components/adminTable/AdminSelectedUserSymbols";
+import { UserType } from "../types/types";
+import { useState } from "react";
+import AdminSelectedUserWatchLists from "../components/adminTable/AdminSelectedUserWatchLists";
 
 function AdminPage() {
     const { isLoadingUser, currentUser } = useGetCurrentUser()
+    const [selectedUser, setSelectedUser] = useState<UserType>()
 
     if (isLoadingUser) return null
 
     if (currentUser?.userRole != 1) { // if userRole was not admin show error
         return (
-            <Box sx={{ height: 633, bgcolor: "ternery.main" }}>
+            <Box sx={{ height: 633, bgcolor: "ternery.main", padding: "250px" }}>
                 <Paper
-                    elevation={3}
+                    //elevation={3}
                     sx={{
                         textAlign: "center",
                         padding: "50px",
                     }}
                 >
                     <Typography>شما اجازه دسترسی به این صفحع را ندارید.</Typography>
+                    <Typography fontSize="30px" color="red" paddingTop="20px">403</Typography>
+
                 </Paper>
             </Box>
         )
     }
 
-  return (
-      <Box sx={{ height: 633, bgcolor: "ternery.main" }}>
+    return (
+        <Box sx={{  bgcolor: "lemon.main" }}>
           {/*header*/}
-          <header className="bg-[#5D6E88] dark:bg-[#2D3E4A]  h-13">
-              <nav className="flex  items-center justify-between  ">
-                  <div className="flex  items-center">
-                      <div className="flex items-center   pe-3 ">
-                         <img src="/Trade-brand.png" alt="brand" width="50" height="30" />
-                          <Divider
-                              className="hidden sm:block"
-                              orientation="vertical"
-                              flexItem
-                          />
-                          <Link to="/" className="px-4">
-                              <Typography className="hidden md:block" color="white">
-                                  برگشت به خانه
-                              </Typography>
-                          </Link>
-                          <Divider
-                              className="hidden sm:block"
-                              orientation="vertical"
-                              flexItem
-                          />
-                      </div>    
-                  </div>    
-              </nav>
-          </header>
-
-          {/*adminMainTable*/}
-          <AdminMainTable/>
+          <Navbar/>
+            {/*adminMainTable*/}
+            <div className="p-2">
+               <AdminMainTable setSelectedUser={setSelectedUser} />
+               <div className="grid grid-col-1 md:grid-cols-2 py-3 gap-3  ">
+                  {/*admin-selectedUserSymbolsProperty-table*/}
+                  <AdminSelectedUserSymbol selectedUser={selectedUser} />
+                  {/*admin-selectedUserWatchList-table*/}
+                  <AdminSelectedUserWatchLists selectedUser={selectedUser} />
+               </div>
+            </div>
       </Box>
 
   );

@@ -10,12 +10,13 @@ import UserProperty from "./UserProperty";
 import NavAuthState from "./NavAuthState";
 import axios from "axios";
 import { useGetCurrentUser } from "../../features/reactQueryUser/useGetCurrentUser";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 export default function Navbar() {
-
+    const { pathname } = useLocation()
     const { currentUser, isLoadingUser } = useGetCurrentUser()
 
     if (isLoadingUser) return null
+
 
     async function handleClick() {
         console.log("refresh")
@@ -52,16 +53,30 @@ export default function Navbar() {
             <Menu />
             {
              currentUser?.userRole == 1 ? 
-                <Link to="/AdminPage">
-                  <Typography className="hidden md:block" color="white">
-                     داشبورد ادمین
-                   </Typography>
+                pathname == "/" ?
+                    (
+                    <Link to="/AdminPage">
+                      <Typography className="hidden md:block" color="white">
+                        داشبورد ادمین    
+                      </Typography>
 
-                 </Link>
+                    </Link>
+                    )
+                : 
+                    (
+                    <Link to="/">
+                      <Typography className="hidden md:block" color="white">
+                        داشبورد ترید
+                      </Typography>
+
+                    </Link>
+                    )
                 :
-                 <Typography className="hidden md:block" color="white">
+                ( 
+                <Typography className="hidden md:block" color="white">
                      منو-دیده بان کلاسیک
                  </Typography>
+                )
             }             
           </div>
           <Divider
