@@ -32,7 +32,7 @@ function AdminPage() {
     }
 
     return (
-        <Box sx={{  bgcolor: "lemon.main" }}>
+        <Box sx={{ height:"100vh", bgcolor: "lemon.main" }}>
           {/*header*/}
           <Navbar/>
             {/*adminMainTable*/}

@@ -35,14 +35,14 @@ export default function AdminSelectedUserWatchLists({ selectedUser }: Props) {
             return {
                 id: userWatchList.userWatchListId,
                 userWatchListId: userWatchList.userWatchListName,
-                userWatchListSymbolsName: userWatchList.symbols.map((symbol) => { return symbol.symbolName }).join("-")
+                userWatchListSymbolsName: userWatchList.symbols.at(0) ? userWatchList.symbols.map((symbol) => { return symbol.symbolName }).join("--") : "نمادی به لیست اضافه نشده"
             };
         })
         : []
 
 
     return (
-        <Box sx={{ height:"245px", bgcolor: "ternery.main", scrollbarColor: "blue" }}>
+        <Box sx={{ height:"320px", bgcolor: "ternery.main", scrollbarColor: "blue" }}>
             <DataGrid
                 rows={rows}
                 scrollbarSize={10}

@@ -27,6 +27,15 @@ const columns: GridColDef[] = [
         width: 190,
         valueFormatter: (e) => (`${e.value} سهم`),
     },
+    {
+        field: "symolBoughtDate",
+        headerName: "تاریخ خرید سهم",
+        type: "string",
+        align: "center",
+        headerAlign: "center",
+        width: 190,
+        //valueFormatter: (e) => (`${e.value} سهم`),
+    },
     
 
 
@@ -37,6 +46,17 @@ interface Props {
 }
 
 export default function AdminSelectedUserSymbol({ selectedUser }:Props) {
+    function generateRandomDate() {
+        const randomDayNumber = Math.floor(Math.random() * 30);
+        const randomDay = randomDayNumber <= 9 ? `0${randomDayNumber}` : randomDayNumber
+
+        const randomMonthNumber = Math.floor(Math.random() * 30);
+        let randomMonth = randomMonthNumber == 0 ? 1 : randomMonthNumber
+        randomMonth = randomMonth <= 9 ? `0${randomMonth}` : randomMonth
+
+        return `1403/${randomMonth}/${randomDay}`
+    }
+
 
     // get rows value from user // if selecterUser was null so render []
     const rows = selectedUser ? 
@@ -46,13 +66,14 @@ export default function AdminSelectedUserSymbol({ selectedUser }:Props) {
                                  symbolName: userSymbolProperty.symbol.symbolName,
                                  symbolPrice: userSymbolProperty.symbolPrice,
                                  symbolQuantity: userSymbolProperty.symbolQuantity,
+                                 symolBoughtDate: generateRandomDate()
                         };
                    })
                    : []
 
 
     return (
-        <Box sx={{ height: 245, bgcolor: "ternery.main", scrollbarColor: "blue" }}>
+        <Box sx={{ height: 320, bgcolor: "ternery.main", scrollbarColor: "blue" }}>
             <DataGrid
                 rows={rows}
                 scrollbarSize={10}

@@ -13,7 +13,10 @@ export const useGetAllUsers = () => {
         queryKey: ["all-users"], // the queryKey is a unic key to identify the data in the cash
         queryFn: async () => await axios({
             method: "get",
-            url:"https://localhost:7007/api/Users/getAllUsers",
+            url: "https://localhost:7007/api/Users/getAllUsers",
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            },
         }).then(res => res.data),
 
     });

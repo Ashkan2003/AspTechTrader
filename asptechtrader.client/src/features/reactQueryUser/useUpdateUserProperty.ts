@@ -13,9 +13,7 @@ export const useUpdateUserProperty = () => {
             return axios({
                 method: "put",
                 url: "https://localhost:7007/api/Users/updateUserProperty",
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                },
+                
                 data: data
             });
         },

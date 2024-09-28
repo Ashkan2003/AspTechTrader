@@ -1,6 +1,7 @@
 ﻿using AspTechTrader.Core.Domain.Entities;
 using AspTechTrader.Core.DTO;
 using AspTechTrader.Core.ServiceContracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AspTechTrader.Api.Controllers
@@ -113,6 +114,7 @@ namespace AspTechTrader.Api.Controllers
             return Ok(isSuccess);
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpGet("getAllUsers")]
         public async Task<ActionResult> GetAllUsers()
         {
